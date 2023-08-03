@@ -7,6 +7,15 @@ public abstract class PlayerWeapon : MonoBehaviour
     
     public bool isChosen;
     public bool isPickedUp;
+    
+    public int bulletsInTime;
+    public int bulletsMagazineTotal;
+    public int clipCapacity;
+    public int bulletsClip;
+    
+    public GameEvent onWeaponShot;
+    public GameEvent onWeaponReload;
+    public GameEvent textRefresh;
 
     public void PickUp()
     {
@@ -24,10 +33,11 @@ public abstract class PlayerWeapon : MonoBehaviour
 
     public void SwitchToThis(int index)
     {
+        transform.GetChild(0).gameObject.SetActive(true);
+        textRefresh.Raise(this);
         WeaponManager.weaponManager.curWeapon.transform.GetChild(0).gameObject.SetActive(false);
         WeaponManager.weaponManager.curWeapon.isChosen = false;
         WeaponManager.weaponManager.curWeapon = WeaponManager.weaponManager.Weapons[index];
         isChosen = true;
-        transform.GetChild(0).gameObject.SetActive(true);
     }
 }

@@ -12,5 +12,10 @@ public class Player : MonoBehaviour
             Destroy(other.gameObject);
             other.GetComponent<PickUpWeapon>().onPickedUpWeapon.Raise();
         }
+
+        if (other.gameObject.GetComponent<Ammo>())
+        {
+            other.GetComponent<Ammo>().CanPickUp();
+        }
     }
 }

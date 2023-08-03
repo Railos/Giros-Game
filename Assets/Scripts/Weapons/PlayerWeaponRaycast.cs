@@ -7,15 +7,16 @@ public class PlayerWeaponRaycast : PlayerWeapon
     public bool canShoot;
     public bool canHold;
     public bool isShooting;
-
-    public int bulletsInTime;
-    private int _bulletsLeft;
     
+    private int _bulletsLeft;
+
+    public float reloadTime;
     public float waitBeforeNextShot;
     public float damage;
     public float raycastRange;
     private float _spread;
-    
+
+    public KeyCode reloadKey;
 
     [Header("Camera Shake")]
     public float magnitude;
@@ -39,23 +40,25 @@ public class PlayerWeaponRaycast : PlayerWeapon
     
     private void Update()
     {
-        Inputing();
+        CheckReload();
+        CheckShooting();
         Checkings();
-        
+        _bulletsLeft = bulletsInTime;
     }
-    
 
-    private void Inputing()
+    private void CheckReload()
+    {
+        if (!Input.GetKeyDown(reloadKey)) return;
+        if (bulletsClip < clipCapacity)
+        {
+            Invoke(nameof(Reload), reloadTime);
+        }
+    }
+
+    private void CheckShooting()
     {
         if (!canShoot) return;
-        if (canHold)
-        {
-            isShooting = Input.GetKey(KeyCode.Mouse0);
-        }
-        else
-        {
-            isShooting = Input.GetKeyDown(KeyCode.Mouse0);
-        }
+        isShooting = canHold ? Input.GetKey(KeyCode.Mouse0) : Input.GetKeyDown(KeyCode.Mouse0);
     }
     
     private void Checkings() 
@@ -64,6 +67,7 @@ public class PlayerWeaponRaycast : PlayerWeapon
         if (!isChosen) return;
         if (!canShoot) return;
         if (!isShooting) return;
+        if (bulletsClip <= 0) return;
         Shoot();
     }
 
@@ -74,8 +78,8 @@ public class PlayerWeaponRaycast : PlayerWeapon
 
         CameraShaker.Instance.ShakeOnce(magnitude, roughness, fadeInTime, fadeOutTime);
 
-        float x = Random.Range(0.01f, 0.05f);
-        float y = Random.Range(0.01f, 0.05f);
+        var x = Random.Range(0.01f, 0.05f);
+        var y = Random.Range(0.01f, 0.05f);
         
         if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f + x, 0.5f + y, 0f)),out _rayHit, raycastRange))
         {
@@ -86,10 +90,13 @@ public class PlayerWeaponRaycast : PlayerWeapon
         }
 
         _bulletsLeft--;
+        bulletsClip--;
+        onWeaponShot.Raise(this);
+        textRefresh.Raise(this);
+        
         Invoke(nameof(ResetShot), waitBeforeNextShot);
         
-        // && bulletsLeftInMagazine > 0
-        if (_bulletsLeft > 0)
+        if (_bulletsLeft > 0 && bulletsClip > 0)
         {
             Shoot();
         }
@@ -98,5 +105,22 @@ public class PlayerWeaponRaycast : PlayerWeapon
     private void ResetShot()
     {
         canShoot = true;
+    }
+
+    private void Reload()
+    {
+        _bulletsLeft = bulletsInTime;
+        if (bulletsMagazineTotal <= clipCapacity - bulletsClip)
+        {
+            bulletsClip += bulletsMagazineTotal;
+            bulletsMagazineTotal = 0;
+        }else 
+        {
+            bulletsMagazineTotal -= clipCapacity - bulletsClip;
+            bulletsClip = clipCapacity;
+        }
+        
+        onWeaponReload.Raise(this);
+        textRefresh.Raise(this);
     }
 }
