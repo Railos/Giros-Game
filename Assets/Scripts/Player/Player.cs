@@ -5,6 +5,21 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
+    public static Player player;
+
+    private void Awake()
+    {
+        if (player != null)
+        {
+            Destroy(player);
+        }
+        else
+        {
+            player = this;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("PickableWeapon"))

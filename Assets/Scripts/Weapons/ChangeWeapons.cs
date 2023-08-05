@@ -11,8 +11,8 @@ public class ChangeWeapons : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1) && WeaponManager.weaponManager.curWeapon != WeaponManager.weaponManager.Weapons[0])
         {
             Debug.Log("Pistol");
-            WeaponManager.weaponManager.Weapons[0].SwitchToThis(0);
             weaponChanged.Raise(WeaponManager.weaponManager.Weapons[0]);
+            WeaponManager.weaponManager.Weapons[0].SwitchToThis(0);
             return;
         }
         if (WeaponManager.weaponManager.Weapons.Count == 1) return;

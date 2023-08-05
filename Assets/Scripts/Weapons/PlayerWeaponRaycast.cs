@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using EZCameraShake;
 using UnityEngine;
 
@@ -17,6 +19,7 @@ public class PlayerWeaponRaycast : PlayerWeapon
     private float _spread;
 
     public KeyCode reloadKey;
+    
 
     [Header("Camera Shake")]
     public float magnitude;
@@ -32,6 +35,7 @@ public class PlayerWeaponRaycast : PlayerWeapon
     public GunRecoil recoil;
 
     private RaycastHit _rayHit;
+    
 
     private void Start()
     {
@@ -51,6 +55,8 @@ public class PlayerWeaponRaycast : PlayerWeapon
         if (!Input.GetKeyDown(reloadKey)) return;
         if (bulletsClip < clipCapacity)
         {
+            interruptReload = false;
+            isReloading = true;
             Invoke(nameof(Reload), reloadTime);
         }
     }
@@ -75,13 +81,8 @@ public class PlayerWeaponRaycast : PlayerWeapon
     {
         canShoot = false;
         recoil.Fire();
-
-        CameraShaker.Instance.ShakeOnce(magnitude, roughness, fadeInTime, fadeOutTime);
-
-        var x = Random.Range(0.01f, 0.05f);
-        var y = Random.Range(0.01f, 0.05f);
         
-        if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f + x, 0.5f + y, 0f)),out _rayHit, raycastRange))
+        if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)),out _rayHit))
         {
             if (_rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
@@ -89,6 +90,8 @@ public class PlayerWeaponRaycast : PlayerWeapon
             }
         }
 
+        CameraShaker.Instance.ShakeOnce(magnitude, roughness, fadeInTime, fadeOutTime);
+        
         _bulletsLeft--;
         bulletsClip--;
         onWeaponShot.Raise(this);
@@ -109,6 +112,7 @@ public class PlayerWeaponRaycast : PlayerWeapon
 
     private void Reload()
     {
+        if (interruptReload) return;
         _bulletsLeft = bulletsInTime;
         if (bulletsMagazineTotal <= clipCapacity - bulletsClip)
         {
@@ -119,7 +123,8 @@ public class PlayerWeaponRaycast : PlayerWeapon
             bulletsMagazineTotal -= clipCapacity - bulletsClip;
             bulletsClip = clipCapacity;
         }
-        
+
+        isReloading = false;
         onWeaponReload.Raise(this);
         textRefresh.Raise(this);
     }
