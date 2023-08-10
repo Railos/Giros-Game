@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using EZCameraShake;
 using UnityEngine;
 
-public class PlayerWeaponRaycast : PlayerWeapon
+public class PlayerWeaponRaycast : PlayerWeaponRanged
 {
     [Header("Stats")]
     public bool canShoot;
@@ -87,6 +87,7 @@ public class PlayerWeaponRaycast : PlayerWeapon
             if (_rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
                 Debug.Log("Shot Enemy");
+                _rayHit.collider.GetComponent<Enemy>().Health -= damage;
             }
         }
 

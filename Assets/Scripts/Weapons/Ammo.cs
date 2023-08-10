@@ -11,13 +11,13 @@ public class Ammo : MonoBehaviour
     
     public void CanPickUp()
     {
-        if (WeaponManager.weaponManager.Weapons.Count >= index + 1) PickUp();
+        if (WeaponManager.weaponManager.WeaponsRanged.Count >= index + 1) PickUp();
     }
 
     private void PickUp()
     {
-        WeaponManager.weaponManager.Weapons[index].bulletsMagazineTotal += ammoWhenPickedUp;
-        onAmmoPickUp.Raise(WeaponManager.weaponManager.Weapons[index].GetComponent<PlayerWeapon>());
+        WeaponManager.weaponManager.WeaponsRanged[index].bulletsMagazineTotal += ammoWhenPickedUp;
+        onAmmoPickUp.Raise(WeaponManager.weaponManager.WeaponsRanged[index].GetComponent<PlayerWeaponRanged>());
         Destroy(gameObject);
     }
 }

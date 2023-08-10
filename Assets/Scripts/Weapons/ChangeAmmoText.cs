@@ -12,7 +12,7 @@ public class ChangeAmmoText : MonoBehaviour
 
     public void RefreshText(Component sender, object data)
     {
-        clipText.text = sender.GetComponent<PlayerWeapon>().bulletsClip.ToString();
-        magazineText.text = sender.GetComponent<PlayerWeapon>().bulletsMagazineTotal.ToString();
+        clipText.text = sender.GetComponent<PlayerWeaponRanged>().bulletsClip.ToString();
+        magazineText.text = sender.GetComponent<PlayerWeaponRanged>().bulletsMagazineTotal.ToString();
     }
 }

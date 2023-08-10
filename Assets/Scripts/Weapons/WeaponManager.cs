@@ -4,8 +4,8 @@ using UnityEngine;
 public class WeaponManager : MonoBehaviour
 {
     public static WeaponManager weaponManager;
-    public PlayerWeapon curWeapon;
-    public List<PlayerWeapon> Weapons;
+    public PlayerWeaponRanged curWeaponRanged;
+    public List<PlayerWeaponRanged> WeaponsRanged;
 
     private void Awake()
     {
