@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using EZCameraShake;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerWeaponRaycast : PlayerWeaponRanged
@@ -35,6 +36,9 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     public GunRecoil recoil;
 
     private RaycastHit _rayHit;
+
+    public GameObject muzzleFlash;
+    
     
 
     private void Start()
@@ -81,7 +85,8 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     {
         canShoot = false;
         recoil.Fire();
-        
+
+        Destroy(Instantiate(muzzleFlash, attackPoint.position, quaternion.identity, cam.transform), 0.2f);
         if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)),out _rayHit))
         {
             if (_rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
