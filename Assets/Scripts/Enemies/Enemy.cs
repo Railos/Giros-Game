@@ -29,5 +29,9 @@ public class Enemy : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        else
+        {
+            Destroy(Instantiate(ObjectsPool.objectPool.bloodSpray, transform.position, Quaternion.identity), 0.4f);
+        }
     }
 }

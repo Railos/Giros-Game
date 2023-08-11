@@ -38,8 +38,8 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     private RaycastHit _rayHit;
 
     public GameObject muzzleFlash;
-    
-    
+
+
 
     private void Start()
     {
