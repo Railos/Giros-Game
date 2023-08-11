@@ -18,16 +18,16 @@ public class PlayerLook : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        //UpdateSens();
+        UpdateSens();
     }
 
-    /*
+    
     public void UpdateSens()
     {
-        sensX = PlayerPrefs.GetInt("sens", 600);
-        sensY = PlayerPrefs.GetInt("sens", 600);
+        sensX = PlayerPrefs.GetFloat("SensX");
+        sensY = PlayerPrefs.GetFloat("SensY");
     }
-    */
+    
     
     private void LateUpdate()
     {

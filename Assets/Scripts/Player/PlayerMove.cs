@@ -225,8 +225,16 @@ public class PlayerMove : MonoBehaviour
     {
         float startTime = Time.time;
         Vector3 moveDir = new Vector3(horizontalInput, 0f, verticalInput);
-        
+
+        float prevHeight = GetComponent<HeadBobbing>().headBobHeight;
         GetComponent<HeadBobbing>().headBobHeight = 0f;
+        float prevHeightWeapon = 0f;
+        if (WeaponManager.weaponManager.curWeaponRanged)
+        {
+            prevHeightWeapon = WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight;
+            WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight = 0f;
+        }
+        
         
         while (Time.time < startTime + dashTime)
         {
@@ -248,7 +256,9 @@ public class PlayerMove : MonoBehaviour
             Wcam.fieldOfView -= 0.07f;
             yield return null;
         } 
-        GetComponent<HeadBobbing>().headBobHeight = 0.2f;
+        GetComponent<HeadBobbing>().headBobHeight = prevHeight;
+        if (WeaponManager.weaponManager.curWeaponRanged)
+            WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight = prevHeightWeapon;
         cam.fieldOfView = 70f;
         Wcam.fieldOfView = 70f;
     }
