@@ -17,9 +17,12 @@ public class MainMenuManager : MonoBehaviour
     [Header("Sliders")] 
     public GameObject sliderX;
     public GameObject sliderY;
-    
-    private int[] resolutionsX = new [] {1920, 1600, 1280};
-    private int[] resolutionsY = new [] {1080, 900, 720};
+
+    [Header("Dropdowns")] 
+    public GameObject resolution;
+
+    private int[] resolutionsX = new [] {3840, 2560, 1920, 1600, 1366, 1280, 1024, 800};
+    private int[] resolutionsY = new [] {2160, 1440, 1080, 900, 768, 720, 768, 600};
 
     private void Start()
     {
@@ -29,6 +32,15 @@ public class MainMenuManager : MonoBehaviour
 
         sliderX.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("SensX").ToString();
         sliderY.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("SensY").ToString();
+
+        if (!PlayerPrefs.HasKey("Resolution"))
+        {
+            PlayerPrefs.SetInt("Resolution", 2);
+            PlayerPrefs.Save();
+            
+            Screen.SetResolution(resolutionsX[2], resolutionsY[2], FullScreenMode.ExclusiveFullScreen);
+        }
+        resolution.GetComponent<TMP_Dropdown>().value = PlayerPrefs.GetInt("Resolution");
     }
     
     public void StartGame()
@@ -73,6 +85,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void ChangeResolution(int value)
     {
-        Screen.SetResolution(resolutionsX[value], resolutionsY[value], FullScreenMode.FullScreenWindow);
+        Screen.SetResolution(resolutionsX[value], resolutionsY[value], FullScreenMode.ExclusiveFullScreen);
+        PlayerPrefs.SetInt("Resolution", value);
+        PlayerPrefs.Save();
     }
 }

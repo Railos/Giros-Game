@@ -113,7 +113,7 @@ public class PlayerMove : MonoBehaviour
             collider.height = playerHeight;
         }
         
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && CanDash) //  && transform.GetChild(0).GetComponent<grapplingToEnemy>().CanGrapple
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && CanDash && moveDirection.magnitude > 0f)
         {
             CanDash = false;
             StartCoroutine(Dashing()); 
