@@ -204,6 +204,8 @@ MonoBehaviour:
   waitBeforeNextShot: 0.5
   damage: 10
   raycastRange: 100
+  minSpread: 0
+  maxSpread: 0.01
   reloadKey: 114
   magnitude: 2
   roughness: 3
@@ -1151,7 +1153,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 30, y: 30}
+  m_SizeDelta: {x: 45, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &537932528
 MonoBehaviour:
@@ -1475,6 +1477,7 @@ GameObject:
   - component: {fileID: 763492711}
   - component: {fileID: 763492710}
   - component: {fileID: 763492709}
+  - component: {fileID: 763492714}
   m_Layer: 7
   m_Name: Enemy (5)
   m_TagString: Untagged
@@ -1575,6 +1578,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &763492714
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763492708}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &772039465
 GameObject:
   m_ObjectHideFlags: 0
@@ -1769,6 +1788,7 @@ GameObject:
   - component: {fileID: 807736050}
   - component: {fileID: 807736049}
   - component: {fileID: 807736048}
+  - component: {fileID: 807736053}
   m_Layer: 7
   m_Name: Enemy (6)
   m_TagString: Untagged
@@ -1869,6 +1889,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &807736053
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 807736047}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &815024400
 GameObject:
   m_ObjectHideFlags: 0
@@ -1939,6 +1975,7 @@ GameObject:
   - component: {fileID: 819922723}
   - component: {fileID: 819922722}
   - component: {fileID: 819922726}
+  - component: {fileID: 819922727}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
@@ -2039,6 +2076,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   tookDamage: {fileID: 11400000, guid: 62d0cc5835186c04086f35bfdf578234, type: 2}
+--- !u!54 &819922727
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 819922721}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &867255624
 GameObject:
   m_ObjectHideFlags: 0
@@ -2802,6 +2855,8 @@ MonoBehaviour:
   waitBeforeNextShot: 0.15
   damage: 9
   raycastRange: 100
+  minSpread: 0
+  maxSpread: 0.013
   reloadKey: 114
   magnitude: 3
   roughness: 3
@@ -3180,10 +3235,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -3256,6 +3311,7 @@ GameObject:
   - component: {fileID: 1302873008}
   - component: {fileID: 1302873007}
   - component: {fileID: 1302873006}
+  - component: {fileID: 1302873011}
   m_Layer: 7
   m_Name: Enemy (1)
   m_TagString: Untagged
@@ -3356,6 +3412,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1302873011
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302873005}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &1346905975
 GameObject:
   m_ObjectHideFlags: 0
@@ -3458,17 +3530,19 @@ MonoBehaviour:
   onWeaponReload: {fileID: 11400000, guid: a7b3fa05d9894a94688207e8bf961b9a, type: 2}
   textRefresh: {fileID: 11400000, guid: 54e526ae1cf19a043b53c537f2501fae, type: 2}
   canShoot: 1
-  canHold: 1
+  canHold: 0
   isShooting: 0
   reloadTime: 0.7
   waitBeforeNextShot: 0.4
-  damage: 9
+  damage: 25
   raycastRange: 100
+  minSpread: 0
+  maxSpread: 0.03
   reloadKey: 114
-  magnitude: 3
-  roughness: 3
-  fadeInTime: 0.25
-  fadeOutTime: 0.25
+  magnitude: 15
+  roughness: 5
+  fadeInTime: 0.2
+  fadeOutTime: 0.2
   attackPoint: {fileID: 300678667}
   cam: {fileID: 330585545}
   recoil: {fileID: 1346905978}
@@ -4032,7 +4106,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1794047215}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.963869, y: 1.3, z: 2.8087232}
+  m_LocalPosition: {x: -5.963869, y: 34.11, z: 2.8087232}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4079,7 +4153,7 @@ MonoBehaviour:
   jumpForce: 7
   jumpCooldown: 0.25
   airMultiplier: 0.4
-  crouchMoveSpeed: 5
+  crouchMoveSpeed: 20000
   jumpKey: 32
   sprintKey: 304
   crouchKey: 306
@@ -4185,7 +4259,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 25, y: 25}
+  m_SizeDelta: {x: 45, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1802862234
 MonoBehaviour:
@@ -4540,6 +4614,7 @@ GameObject:
   - component: {fileID: 1869791555}
   - component: {fileID: 1869791554}
   - component: {fileID: 1869791553}
+  - component: {fileID: 1869791558}
   m_Layer: 7
   m_Name: Enemy (4)
   m_TagString: Untagged
@@ -4640,6 +4715,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1869791558
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1869791552}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &1874906600
 GameObject:
   m_ObjectHideFlags: 0
@@ -4653,6 +4744,7 @@ GameObject:
   - component: {fileID: 1874906603}
   - component: {fileID: 1874906602}
   - component: {fileID: 1874906601}
+  - component: {fileID: 1874906606}
   m_Layer: 7
   m_Name: Enemy (2)
   m_TagString: Untagged
@@ -4753,6 +4845,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1874906606
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1874906600}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &1876762511
 GameObject:
   m_ObjectHideFlags: 0
@@ -4934,6 +5042,7 @@ GameObject:
   - component: {fileID: 2011831187}
   - component: {fileID: 2011831186}
   - component: {fileID: 2011831185}
+  - component: {fileID: 2011831190}
   m_Layer: 7
   m_Name: Enemy (3)
   m_TagString: Untagged
@@ -5034,6 +5143,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &2011831190
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2011831184}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &2117834165
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EZCameraShake;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PlayerWeaponRaycast : PlayerWeaponRanged
 {
@@ -18,6 +19,9 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     public float damage;
     public float raycastRange;
     private float _spread;
+
+    public float minSpread;
+    public float maxSpread;
 
     public KeyCode reloadKey;
     
@@ -86,12 +90,13 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
         canShoot = false;
         recoil.Fire();
 
+        float x = Random.Range(minSpread, maxSpread);
+        float y = Random.Range(minSpread, maxSpread);
         Destroy(Instantiate(muzzleFlash, attackPoint.position, quaternion.identity, cam.transform), 0.2f);
-        if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)),out _rayHit))
+        if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f + x, 0.5f + y, 0f)),out _rayHit))
         {
             if (_rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
-                Debug.Log("Shot Enemy");
                 _rayHit.collider.GetComponent<Enemy>().Health -= damage;
             }
         }

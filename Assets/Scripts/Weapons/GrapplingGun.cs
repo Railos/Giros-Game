@@ -70,14 +70,16 @@ public class GrapplingGun : MonoBehaviour
         
         Player.player.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
+        var grappleForce = Vector3.Distance(transform.position, enemy.transform.position) * 700f * Time.deltaTime;
         while (Time.time < startTime + 0.5f)
         {
-            var grappleForce = Vector3.Distance(transform.position, enemy.transform.position) * 1000f * Time.deltaTime;
             Player.player.GetComponent<Rigidbody>().velocity = moveDir * grappleForce;
             if (Player.player.GetComponent<Rigidbody>().velocity.y > 5f) { Player.player.GetComponent<Rigidbody>().velocity = new Vector3(Player.player.GetComponent<Rigidbody>().velocity.x, 0f, Player.player.GetComponent<Rigidbody>().velocity.z); }
 
             yield return null;
         }
+        
+        Player.player.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         lineRenderer.enabled = false;
         Player.player.GetComponent<PlayerMove>().enabled = true;

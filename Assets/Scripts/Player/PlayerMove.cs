@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -56,6 +57,9 @@ public class PlayerMove : MonoBehaviour
 
     Rigidbody rb;
 
+    private bool isForcingDown;
+    private bool isSliding;
+    
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -65,7 +69,7 @@ public class PlayerMove : MonoBehaviour
     private void Update()
     {
         // ground check
-        Grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.5f, whatIsGround);
+        Grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
         MyInput();
         SpeedControl();
@@ -105,12 +109,16 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown(crouchKey))
         {
             collider.height = playerHeight / 2;
+            isForcingDown = true;
+            GetComponent<HeadBobbing>().enabled = false;
         }
 
         // stop crouch
         if (Input.GetKeyUp(crouchKey))
         {
             collider.height = playerHeight;
+            GetComponent<HeadBobbing>().enabled = true;
+            isSliding = false;
         }
         
         if (Input.GetKeyDown(KeyCode.LeftAlt) && CanDash && moveDirection.magnitude > 0f)
@@ -123,10 +131,24 @@ public class PlayerMove : MonoBehaviour
 
     private void StateHandler()
     {
-        // Mode - Crouching
-        if (Input.GetKey(crouchKey))
+        if (isForcingDown)
         {
-            rb.AddForce(transform.forward * crouchMoveSpeed);
+            if (!Grounded)
+            {
+                rb.velocity = Vector3.down * 8000f * Time.deltaTime;
+            }
+            else
+            {
+                isForcingDown = false;
+                rb.velocity = Vector3.down * 200f;
+            }
+        }
+        
+        // Mode - Crouching
+        else if (Input.GetKey(crouchKey))
+        {
+            isSliding = true;
+            rb.AddForce(transform.forward * crouchMoveSpeed * Time.deltaTime);
         }
 
         // Mode - Sprinting
@@ -148,21 +170,22 @@ public class PlayerMove : MonoBehaviour
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         // on slope
-        if (OnSlope() && !exitingSlope)
+        if (!isSliding)
         {
-            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 20f, ForceMode.Force);
+            if (OnSlope() && !exitingSlope)
+            {
+                rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 20f, ForceMode.Force);
 
-            if (rb.velocity.y > 0)
-                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+                if (rb.velocity.y > 0)
+                    rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+            }
+
+            // on ground
+            else if (Grounded)
+                rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            else if (!Grounded)
+                rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
-
-        // on ground
-        else if (Grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-        else if (!Grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
-
-
 
         // turn gravity off while on slope
         rb.useGravity = !OnSlope();
