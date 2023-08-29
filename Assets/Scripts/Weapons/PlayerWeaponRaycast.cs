@@ -105,7 +105,7 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
         
         _bulletsLeft--;
         bulletsClip--;
-        onWeaponShot.Raise(this);
+        onWeaponShot.Raise();
         textRefresh.Raise(this);
         
         Invoke(nameof(ResetShot), waitBeforeNextShot);

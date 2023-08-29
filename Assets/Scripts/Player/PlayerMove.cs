@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -43,6 +44,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float dashTime;
     [SerializeField] private float dashSpeed;
     public bool CanDash = true;
+    private bool isDashing;
 
     private int jumpsLeft;
     public int MaxJumps = 1;
@@ -52,14 +54,15 @@ public class PlayerMove : MonoBehaviour
 
     [SerializeField] private new CapsuleCollider collider;
     
-
+    [SerializeField] private AudioSource footsteps;
+    
     Vector3 moveDirection;
 
     Rigidbody rb;
 
-    private bool isForcingDown;
+    public bool isForcingDown;
     private bool isSliding;
-    
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -84,6 +87,10 @@ public class PlayerMove : MonoBehaviour
                 jumpsLeft = MaxJumps;
             }
         }else rb.drag = 0;
+
+
+        if (moveDirection.magnitude > 0 && !isSliding && Grounded && !isDashing) footsteps.enabled = true;
+        else footsteps.enabled = false;
     }
 
     private void FixedUpdate()
@@ -97,7 +104,7 @@ public class PlayerMove : MonoBehaviour
         verticalInput = Input.GetAxisRaw("Vertical");
 
         // when to jump
-        if(Input.GetKeyDown(jumpKey) && jumpsLeft > 0)
+        if(Input.GetKeyDown(jumpKey) && jumpsLeft > 0 && !isForcingDown)
         {
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);
@@ -116,12 +123,17 @@ public class PlayerMove : MonoBehaviour
         // stop crouch
         if (Input.GetKeyUp(crouchKey))
         {
+            if (!isForcingDown)
+            {
+                transform.position = new Vector3(transform.position.x, transform.position.y + playerHeight / 2 - 0.1f, transform.position.z);
+                rb.velocity = Vector3.zero;
+            }
             collider.height = playerHeight;
             GetComponent<HeadBobbing>().enabled = true;
             isSliding = false;
         }
         
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && CanDash && moveDirection.magnitude > 0f)
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && CanDash && moveDirection.magnitude > 0f && !isForcingDown && !isSliding)
         {
             CanDash = false;
             StartCoroutine(Dashing()); 
@@ -135,12 +147,14 @@ public class PlayerMove : MonoBehaviour
         {
             if (!Grounded)
             {
-                rb.velocity = Vector3.down * 8000f * Time.deltaTime;
+                GetComponent<HeadBobbing>().enabled = false;
+                rb.AddForce(Vector3.down * 100f * Time.deltaTime, ForceMode.Impulse);
             }
             else
             {
                 isForcingDown = false;
-                rb.velocity = Vector3.down * 200f;
+                RaycastHit rayhit;
+                if (Physics.Raycast(transform.position, Vector3.down, out rayhit)) transform.position = rayhit.point;
             }
         }
         
@@ -182,7 +196,9 @@ public class PlayerMove : MonoBehaviour
 
             // on ground
             else if (Grounded)
+            {
                 rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            }
             else if (!Grounded)
                 rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
         }
@@ -257,8 +273,8 @@ public class PlayerMove : MonoBehaviour
             prevHeightWeapon = WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight;
             WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight = 0f;
         }
-        
-        
+
+        isDashing = true;
         while (Time.time < startTime + dashTime)
         {
             cam.fieldOfView += 0.15f;
@@ -271,14 +287,16 @@ public class PlayerMove : MonoBehaviour
 
             yield return null;
         }
-
+        isDashing = false;
+        
         startTime = Time.time;
         while (Time.time < startTime + dashTime)
         {
             cam.fieldOfView -= 0.15f;
             Wcam.fieldOfView -= 0.07f;
             yield return null;
-        } 
+        }
+        
         GetComponent<HeadBobbing>().headBobHeight = prevHeight;
         if (WeaponManager.weaponManager.curWeaponRanged)
             WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight = prevHeightWeapon;

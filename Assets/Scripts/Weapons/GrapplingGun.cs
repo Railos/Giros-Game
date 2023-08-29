@@ -31,6 +31,7 @@ public class GrapplingGun : MonoBehaviour
     private void Update()
     {
         if (!canGrapple) return;
+        if (Player.player.GetComponent<PlayerMove>().isForcingDown) return;
         var cameraCenter = cam.GetComponent<Camera>().ScreenToWorldPoint(new Vector3(Screen.width / 2f, Screen.height / 2f, cam.GetComponent<Camera>().nearClipPlane));
         if (!Physics.Raycast(cameraCenter, transform.forward, out _out, distance)) return;
         if (!Input.GetKeyDown(grappleKey)) return;

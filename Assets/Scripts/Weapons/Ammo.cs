@@ -5,10 +5,11 @@ using UnityEngine;
 public class Ammo : MonoBehaviour
 {
 
-    public GameEvent onAmmoPickUp;
+    public GameEvent onAmmoPickedUp;
+    public GameEvent onTextRefresh;
     public int index;
     public int ammoWhenPickedUp;
-    
+
     public void CanPickUp()
     {
         if (WeaponManager.weaponManager.WeaponsRanged.Count >= index + 1) PickUp();
@@ -16,8 +17,9 @@ public class Ammo : MonoBehaviour
 
     private void PickUp()
     {
+        onAmmoPickedUp.Raise();
         WeaponManager.weaponManager.WeaponsRanged[index].bulletsMagazineTotal += ammoWhenPickedUp;
-        onAmmoPickUp.Raise(WeaponManager.weaponManager.WeaponsRanged[index].GetComponent<PlayerWeaponRanged>());
+        onTextRefresh.Raise(WeaponManager.weaponManager.WeaponsRanged[index].GetComponent<PlayerWeaponRanged>());
         Destroy(gameObject);
     }
 }
