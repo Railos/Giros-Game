@@ -27,6 +27,11 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
         Time.timeScale = 0f;
         Player.player.GetComponent<PlayerLook>().enabled = false;
+        Player.player.GetComponent<PlayerMove>().enabled = false;
+        Player.player.GetComponent<AudioSource>().enabled = false;
+        if (WeaponManager.weaponManager.curWeaponRanged)
+            WeaponManager.weaponManager.curWeaponRanged.enabled = false;
+        Player.player.isPaused = true;
         
         pauseCanvas.SetActive(true);
     }
@@ -39,6 +44,11 @@ public class PauseMenu : MonoBehaviour
         pauseCanvas.SetActive(false);
         Time.timeScale = 1f;
         Player.player.GetComponent<PlayerLook>().enabled = true;
+        Player.player.GetComponent<PlayerMove>().enabled = true;
+        Player.player.GetComponent<AudioSource>().enabled = true;
+        if (WeaponManager.weaponManager.curWeaponRanged)
+            WeaponManager.weaponManager.curWeaponRanged.enabled = true;
+        Player.player.isPaused = false;
     }
 
     public void GoToMenu()

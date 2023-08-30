@@ -5401,7 +5401,7 @@ MonoBehaviour:
   horizontalInput: 0
   verticalInput: 0
   orientation: {fileID: 1794047216}
-  dashTime: 0.25
+  dashTime: 40
   dashSpeed: 3000
   CanDash: 1
   MaxJumps: 1
@@ -5460,6 +5460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76525d3c58135a441ba7ebbcbdf2a7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPaused: 0
 --- !u!82 &1794047222
 AudioSource:
   m_ObjectHideFlags: 0

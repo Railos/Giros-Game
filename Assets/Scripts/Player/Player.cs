@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
 
     public static Player player;
 
+    public bool isPaused;
+
     private void Awake()
     {
         if (player != null)

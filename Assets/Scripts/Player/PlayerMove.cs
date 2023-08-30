@@ -41,7 +41,8 @@ public class PlayerMove : MonoBehaviour
     
     public Transform orientation;
     
-    [SerializeField] private float dashTime;
+    [SerializeField] private int dashTime;
+    private int _dashTime;
     [SerializeField] private float dashSpeed;
     public bool CanDash = true;
     private bool isDashing;
@@ -67,6 +68,8 @@ public class PlayerMove : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+
+        _dashTime = dashTime;
     }
 
     private void Update()
@@ -262,7 +265,6 @@ public class PlayerMove : MonoBehaviour
 
     IEnumerator Dashing()
     {
-        float startTime = Time.time;
         Vector3 moveDir = new Vector3(horizontalInput, 0f, verticalInput);
 
         float prevHeight = GetComponent<HeadBobbing>().headBobHeight;
@@ -275,25 +277,35 @@ public class PlayerMove : MonoBehaviour
         }
 
         isDashing = true;
-        while (Time.time < startTime + dashTime)
+        while (_dashTime > 0)
         {
-            cam.fieldOfView += 0.15f;
-            Wcam.fieldOfView += 0.07f;
             rb.AddRelativeForce(moveDir.normalized * dashSpeed * Time.deltaTime, ForceMode.Impulse);
             if (rb.velocity.y > 5f)
             {
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             }
 
+            if (!Player.player.isPaused)
+            {
+                cam.fieldOfView += 0.15f;
+                Wcam.fieldOfView += 0.07f;
+                _dashTime--;
+            }
+            
             yield return null;
         }
         isDashing = false;
+        _dashTime = dashTime;
         
-        startTime = Time.time;
-        while (Time.time < startTime + dashTime)
+        while (_dashTime > 0)
         {
-            cam.fieldOfView -= 0.15f;
-            Wcam.fieldOfView -= 0.07f;
+            if (!Player.player.isPaused)
+            {
+                cam.fieldOfView -= 0.15f;
+                Wcam.fieldOfView -= 0.07f;
+                _dashTime--;
+            }
+            
             yield return null;
         }
         
@@ -302,6 +314,7 @@ public class PlayerMove : MonoBehaviour
             WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight = prevHeightWeapon;
         cam.fieldOfView = 70f;
         Wcam.fieldOfView = 70f;
+        _dashTime = dashTime;
     }
 
     IEnumerator WaitDashing()
