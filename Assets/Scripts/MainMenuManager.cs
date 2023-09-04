@@ -17,6 +17,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("Sliders")] 
     public GameObject sliderX;
     public GameObject sliderY;
+    public GameObject volumeSlider;
 
     [Header("Dropdowns")] 
     public GameObject resolution;
@@ -32,7 +33,10 @@ public class MainMenuManager : MonoBehaviour
 
         sliderX.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("SensX").ToString();
         sliderY.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("SensY").ToString();
-
+        
+        volumeSlider.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("Volume").ToString();
+        volumeSlider.transform.GetChild(1).GetComponent<Slider>().value = PlayerPrefs.GetFloat("Volume");
+        
         if (!PlayerPrefs.HasKey("Resolution"))
         {
             PlayerPrefs.SetInt("Resolution", 2);
@@ -81,6 +85,14 @@ public class MainMenuManager : MonoBehaviour
         PlayerPrefs.Save();
         
         sliderY.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("SensY").ToString();
+    }
+
+    public void ChangeVolume(float value)
+    {
+        PlayerPrefs.SetFloat("Volume", value);
+        PlayerPrefs.Save();
+        
+        volumeSlider.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("Volume").ToString();
     }
 
     public void ChangeResolution(int value)

@@ -22,6 +22,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        foreach (var audioSource in GetComponents<AudioSource>())
+        {
+            audioSource.volume = PlayerPrefs.GetFloat("Volume") / 100;
+        }
+    }
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("PickableWeapon"))
