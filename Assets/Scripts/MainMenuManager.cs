@@ -18,6 +18,8 @@ public class MainMenuManager : MonoBehaviour
     public GameObject sliderX;
     public GameObject sliderY;
     public GameObject volumeSlider;
+    public GameObject FOVSlider;
+    public GameObject WeaponFOVSlider;
 
     [Header("Dropdowns")] 
     public GameObject resolution;
@@ -30,9 +32,13 @@ public class MainMenuManager : MonoBehaviour
         curCanvas = mainCanvas;
         sliderX.transform.GetChild(1).GetComponent<Slider>().value = PlayerPrefs.GetFloat("SensX");
         sliderY.transform.GetChild(1).GetComponent<Slider>().value = PlayerPrefs.GetFloat("SensY");
+        FOVSlider.transform.GetChild(1).GetComponent<Slider>().value = PlayerPrefs.GetFloat("FOV");
+        WeaponFOVSlider.transform.GetChild(1).GetComponent<Slider>().value = PlayerPrefs.GetFloat("WeaponFOV");
 
         sliderX.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("SensX").ToString();
         sliderY.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("SensY").ToString();
+        FOVSlider.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("FOV").ToString();
+        WeaponFOVSlider.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("WeaponFOV").ToString();
         
         volumeSlider.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("Volume").ToString();
         volumeSlider.transform.GetChild(1).GetComponent<Slider>().value = PlayerPrefs.GetFloat("Volume");
@@ -100,5 +106,21 @@ public class MainMenuManager : MonoBehaviour
         Screen.SetResolution(resolutionsX[value], resolutionsY[value], FullScreenMode.ExclusiveFullScreen);
         PlayerPrefs.SetInt("Resolution", value);
         PlayerPrefs.Save();
+    }
+
+    public void ChangeFOV(float value)
+    {
+        PlayerPrefs.SetFloat("FOV", Mathf.Round(value));
+        PlayerPrefs.Save();
+        
+        FOVSlider.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("FOV").ToString();
+    }
+    
+    public void ChangeWeaponFOV(float value)
+    {
+        PlayerPrefs.SetFloat("WeaponFOV", Mathf.Round(value));
+        PlayerPrefs.Save();
+        
+        WeaponFOVSlider.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("WeaponFOV").ToString();
     }
 }

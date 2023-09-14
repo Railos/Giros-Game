@@ -60,11 +60,14 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
 
     private void CheckReload()
     {
+        if (!isChosen) return;
         if (!Input.GetKeyDown(reloadKey)) return;
+        if (isReloading) return;
         if (bulletsClip < clipCapacity)
         {
             interruptReload = false;
             isReloading = true;
+            onWeaponReload.Raise(this);
             Invoke(nameof(Reload), reloadTime);
         }
     }
@@ -79,6 +82,7 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     {
         if (!isPickedUp) return;
         if (!isChosen) return;
+        if (isReloading) return;
         if (!canShoot) return;
         if (!isShooting) return;
         if (bulletsClip <= 0) return;
@@ -136,7 +140,6 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
         }
 
         isReloading = false;
-        onWeaponReload.Raise(this);
         textRefresh.Raise(this);
     }
 }

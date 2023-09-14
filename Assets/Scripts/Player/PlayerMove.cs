@@ -70,6 +70,9 @@ public class PlayerMove : MonoBehaviour
         rb.freezeRotation = true;
 
         _dashTime = dashTime;
+
+        cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
+        Wcam.fieldOfView = PlayerPrefs.GetFloat("WeaponFOV");
     }
 
     private void Update()
@@ -312,8 +315,8 @@ public class PlayerMove : MonoBehaviour
         GetComponent<HeadBobbing>().headBobHeight = prevHeight;
         if (WeaponManager.weaponManager.curWeaponRanged)
             WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight = prevHeightWeapon;
-        cam.fieldOfView = 70f;
-        Wcam.fieldOfView = 70f;
+        cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
+        Wcam.fieldOfView = PlayerPrefs.GetFloat("WeaponFOV");
         _dashTime = dashTime;
     }
 
