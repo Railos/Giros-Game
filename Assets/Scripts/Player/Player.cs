@@ -42,5 +42,10 @@ public class Player : MonoBehaviour
         {
             other.GetComponent<Ammo>().CanPickUp();
         }
+
+        if (other.gameObject.GetComponent<IPickable>() != null)
+        {
+            other.gameObject.GetComponent<IPickable>().PickUp();
+        }
     }
 }

@@ -142,6 +142,10 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftAlt) && CanDash && moveDirection.magnitude > 0f && !isForcingDown && !isSliding)
         {
             CanDash = false;
+            foreach (var v in WeaponManager.weaponManager.WeaponsRanged)
+            {
+                v.transform.parent.GetComponent<HeadBobbing>().headBobHeight = 0f;
+            }
             StartCoroutine(Dashing()); 
             StartCoroutine(WaitDashing()); 
         }
@@ -269,15 +273,9 @@ public class PlayerMove : MonoBehaviour
     IEnumerator Dashing()
     {
         Vector3 moveDir = new Vector3(horizontalInput, 0f, verticalInput);
-
+        
         float prevHeight = GetComponent<HeadBobbing>().headBobHeight;
         GetComponent<HeadBobbing>().headBobHeight = 0f;
-        float prevHeightWeapon = 0f;
-        if (WeaponManager.weaponManager.curWeaponRanged)
-        {
-            prevHeightWeapon = WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight;
-            WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight = 0f;
-        }
 
         isDashing = true;
         while (_dashTime > 0)
@@ -313,8 +311,10 @@ public class PlayerMove : MonoBehaviour
         }
         
         GetComponent<HeadBobbing>().headBobHeight = prevHeight;
-        if (WeaponManager.weaponManager.curWeaponRanged)
-            WeaponManager.weaponManager.curWeaponRanged.transform.parent.GetComponent<HeadBobbing>().headBobHeight = prevHeightWeapon;
+        foreach (var v in WeaponManager.weaponManager.WeaponsRanged)
+        {
+            v.transform.parent.GetComponent<HeadBobbing>().headBobHeight = 0.1f;
+        }
         cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
         Wcam.fieldOfView = PlayerPrefs.GetFloat("WeaponFOV");
         _dashTime = dashTime;
