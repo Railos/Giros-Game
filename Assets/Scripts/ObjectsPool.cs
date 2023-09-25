@@ -8,6 +8,7 @@ public class ObjectsPool : MonoBehaviour
     public static ObjectsPool objectPool;
 
     public GameObject bloodSpray;
+    public GameObject bigExplosion;
 
     private void Awake()
     {

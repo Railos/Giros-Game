@@ -9,7 +9,7 @@ public class PlayerLook : MonoBehaviour
 
     public Transform orientation;
 
-    [SerializeField] private GameObject cam;
+    public GameObject cam;
 
     public float xRotation;
     public float yRotation;

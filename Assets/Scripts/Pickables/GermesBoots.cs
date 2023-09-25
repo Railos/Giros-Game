@@ -1,11 +1,14 @@
-
 using System.Collections;
 using UnityEngine;
 
 public class GermesBoots : MonoBehaviour, IPickable
 {
+
+    public GameEvent pickedUpEvent;
+    
     public void PickUp()
     {
+        pickedUpEvent.Raise(this);
         Player.player.GetComponent<PlayerMove>().walkSpeed += 4f;
         Player.player.GetComponent<PlayerMove>().sprintSpeed += 4f;
 
