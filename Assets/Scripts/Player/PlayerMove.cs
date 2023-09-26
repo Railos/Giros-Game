@@ -48,7 +48,6 @@ public class PlayerMove : MonoBehaviour
     private bool isDashing;
 
     private int jumpsLeft;
-    [HideInInspector] public bool CanJump;
     public int MaxJumps = 1;
     
     [SerializeField] private Camera cam;
@@ -111,7 +110,7 @@ public class PlayerMove : MonoBehaviour
         verticalInput = Input.GetAxisRaw("Vertical");
 
         // when to jump
-        if(Input.GetKeyDown(jumpKey) && jumpsLeft > 0 && !isForcingDown && CanJump)
+        if(Input.GetKeyDown(jumpKey) && jumpsLeft > 0 && !isForcingDown)
         {
             Jump();
             Invoke(nameof(ResetJump), jumpCooldown);

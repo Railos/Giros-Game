@@ -104,7 +104,7 @@ public class GrapplingGun : MonoBehaviour
 
         swingPoint = predictionHit.point;
         joint = player.gameObject.AddComponent<SpringJoint>();
-        Player.player.GetComponent<PlayerMove>().CanJump = false;
+        Player.player.GetComponent<PlayerMove>().enabled = false;
         joint.autoConfigureConnectedAnchor = false;
         joint.connectedAnchor = swingPoint;
 
@@ -115,8 +115,8 @@ public class GrapplingGun : MonoBehaviour
         joint.minDistance = distanceFromPoint * 0.25f;
 
         // customize values as you like
-        joint.spring = 9f;
-        joint.damper = 7f;
+        joint.spring = 4.5f;
+        joint.damper = 3.5f;
         joint.massScale = 4.5f;
 
         lr.positionCount = 2;
@@ -126,7 +126,7 @@ public class GrapplingGun : MonoBehaviour
     public void StopSwing()
     {
         lr.positionCount = 0;
-        Player.player.GetComponent<PlayerMove>().CanJump = true;
+        Player.player.GetComponent<PlayerMove>().enabled = true;
 
         Destroy(joint);
     }

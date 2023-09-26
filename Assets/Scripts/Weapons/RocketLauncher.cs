@@ -1,8 +1,6 @@
 using System.Collections;
 using EZCameraShake;
-using Unity.Mathematics;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class RocketLauncher : MonoBehaviour
 {
@@ -11,6 +9,8 @@ public class RocketLauncher : MonoBehaviour
 
     public float reloadTime;
     public float damage;
+
+    public KeyCode shootButton;
 
     public LayerMask hitMask;
 
@@ -41,7 +41,7 @@ public class RocketLauncher : MonoBehaviour
     
     private void Checkings()
     {
-        if (!Input.GetKeyDown(KeyCode.Z)) return;
+        if (!Input.GetKeyDown(shootButton)) return;
         if (!canShoot) return;
         canShoot = false;
         StartCoroutine(nameof(Shoot));
