@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public class PlayerMove : MonoBehaviour
 {
     [Header("Movement")]
-    private float moveSpeed;
+    public float moveSpeed;
     public float walkSpeed;
     public float sprintSpeed;
 
@@ -64,12 +64,16 @@ public class PlayerMove : MonoBehaviour
     public bool isForcingDown;
     private bool isSliding;
 
+    public bool afterGrapple;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
         _dashTime = dashTime;
+
+        afterGrapple = false;
 
         cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
         Wcam.fieldOfView = PlayerPrefs.GetFloat("WeaponFOV");
@@ -87,6 +91,7 @@ public class PlayerMove : MonoBehaviour
         // handle drag
         if (Grounded)
         {
+            afterGrapple = false;
             rb.drag = groundDrag;
             if (!Input.GetKey(jumpKey))
             {
@@ -141,6 +146,7 @@ public class PlayerMove : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.LeftAlt) && CanDash && moveDirection.magnitude > 0f && !isForcingDown && !isSliding)
         {
+            afterGrapple = false;
             CanDash = false;
             foreach (var v in WeaponManager.weaponManager.WeaponsRanged)
             {
@@ -165,6 +171,7 @@ public class PlayerMove : MonoBehaviour
                 isForcingDown = false;
                 RaycastHit rayhit;
                 if (Physics.Raycast(transform.position, Vector3.down, out rayhit)) transform.position = rayhit.point;
+                GetComponent<HeadBobbing>().enabled = true;
             }
         }
         
@@ -232,7 +239,7 @@ public class PlayerMove : MonoBehaviour
             Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
             // limit velocity if needed
-            if (flatVel.magnitude > moveSpeed)
+            if (flatVel.magnitude > moveSpeed && !afterGrapple)
             {
                 Vector3 limitedVel = flatVel.normalized * moveSpeed;
                 rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
@@ -272,7 +279,7 @@ public class PlayerMove : MonoBehaviour
 
     IEnumerator Dashing()
     {
-        Vector3 moveDir = new Vector3(horizontalInput, 0f, verticalInput);
+        Vector3 moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
         
         float prevHeight = GetComponent<HeadBobbing>().headBobHeight;
         GetComponent<HeadBobbing>().headBobHeight = 0f;
@@ -280,7 +287,7 @@ public class PlayerMove : MonoBehaviour
         isDashing = true;
         while (_dashTime > 0)
         {
-            rb.AddRelativeForce(moveDir.normalized * dashSpeed * Time.deltaTime, ForceMode.Impulse);
+            rb.AddForce(moveDir * dashSpeed * Time.fixedDeltaTime, ForceMode.Impulse);
             if (rb.velocity.y > 5f)
             {
                 rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -309,15 +316,17 @@ public class PlayerMove : MonoBehaviour
             
             yield return null;
         }
-        
-        GetComponent<HeadBobbing>().headBobHeight = prevHeight;
+
         foreach (var v in WeaponManager.weaponManager.WeaponsRanged)
         {
             v.transform.parent.GetComponent<HeadBobbing>().headBobHeight = 0.1f;
         }
+        
+        GetComponent<HeadBobbing>().headBobHeight = prevHeight; 
         cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
         Wcam.fieldOfView = PlayerPrefs.GetFloat("WeaponFOV");
         _dashTime = dashTime;
+        moveSpeed = walkSpeed;
     }
 
     IEnumerator WaitDashing()

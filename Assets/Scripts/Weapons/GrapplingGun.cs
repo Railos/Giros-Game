@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GrapplingGun : MonoBehaviour
@@ -47,6 +49,15 @@ public class GrapplingGun : MonoBehaviour
 
         CheckForSwingPoints();
 
+        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        // limit velocity if needed
+        if (flatVel.magnitude > 32f)
+        {
+            Vector3 limitedVel = flatVel.normalized * 32f;
+            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+        }
+        
         if (joint != null) OdmGearMovement();
     }
 
@@ -102,6 +113,8 @@ public class GrapplingGun : MonoBehaviour
         // return if predictionHit not found
         if (predictionHit.point == Vector3.zero) return;
 
+        if (pm.afterGrapple) pm.moveSpeed *= 4f;
+
         swingPoint = predictionHit.point;
         joint = player.gameObject.AddComponent<SpringJoint>();
         Player.player.GetComponent<PlayerMove>().enabled = false;
@@ -127,6 +140,8 @@ public class GrapplingGun : MonoBehaviour
     {
         lr.positionCount = 0;
         Player.player.GetComponent<PlayerMove>().enabled = true;
+        pm.afterGrapple = true;
+        pm.moveSpeed /= 4f;
 
         Destroy(joint);
     }

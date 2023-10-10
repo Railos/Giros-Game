@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 {
 
     public float health;
+    public float moneyWhenDie;
     public GameEvent tookDamage;
     
     public float Health
@@ -27,6 +28,8 @@ public class Enemy : MonoBehaviour
     {
         if (health <= 0f)
         {
+            Player.player.money += moneyWhenDie;
+            
             Destroy(gameObject);
         }
         Destroy(Instantiate(ObjectsPool.objectPool.bloodSpray, transform.position, Quaternion.identity), 0.4f);

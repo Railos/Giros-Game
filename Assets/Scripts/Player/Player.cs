@@ -1,12 +1,29 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
 
     public static Player player;
+
+    [SerializeField] private TMP_Text moneyText;
+    
+    private float _money;
+
+    public float money
+    {
+        get
+        {
+            return _money;
+        }
+        set
+        {
+            _money = value;
+            StopCoroutine(nameof(GainMoney));
+            StartCoroutine(nameof(GainMoney));
+        }
+    }
 
     public bool isPaused;
 
@@ -22,6 +39,33 @@ public class Player : MonoBehaviour
         }
     }
 
+    IEnumerator GainMoney()
+    {
+        moneyText.text = _money.ToString();
+        moneyText.alpha = 0f;
+        for (int i = 0; i < 10; i++)
+        {
+            if (moneyText.alpha >= 1f) break;
+
+            moneyText.alpha += 0.1f;
+            yield return new WaitForSeconds(0.02f);
+        }
+
+        moneyText.alpha = 1f;
+        
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i < 10; i++)
+        {
+            if (moneyText.alpha <= 0f) break;
+
+            moneyText.alpha -= 0.1f;
+            yield return new WaitForSeconds(0.02f);
+        }
+
+        moneyText.alpha = 0f;
+    }
+    
     private void Start()
     {
         foreach (var audioSource in GetComponents<AudioSource>())
