@@ -9,6 +9,7 @@ public class Rocket : MonoBehaviour
     public float radius;
     public float damage;
     public float explosionForce;
+    public float rocketSpeed;
 
     public GameEvent explosionEvent;
 
@@ -20,7 +21,7 @@ public class Rocket : MonoBehaviour
     
     private void Start()
     {
-        GetComponent<Rigidbody>().AddForce(Player.player.GetComponent<PlayerLook>().cam.transform.forward * 30f,
+        GetComponent<Rigidbody>().AddForce(Player.player.GetComponent<PlayerLook>().cam.transform.forward * rocketSpeed,
             ForceMode.Impulse);
         StartCoroutine(nameof(Flying));
     }
@@ -37,7 +38,7 @@ public class Rocket : MonoBehaviour
 
     private IEnumerator Flying()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
         Instantiate(ObjectsPool.objectPool.bigExplosion, transform.position, Quaternion.identity);
         Explode();
         
@@ -59,7 +60,7 @@ public class Rocket : MonoBehaviour
             }
             else if(colliders[i].TryGetComponent(out Rigidbody rb))
             {
-                rb.AddExplosionForce(explosionForce, transform.position, radius);
+                rb.AddExplosionForce(explosionForce, transform.position, radius, 1.5f);
             }
         }
     }

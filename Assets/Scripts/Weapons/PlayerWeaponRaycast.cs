@@ -16,6 +16,7 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
 
     public float reloadTime;
     public float waitBeforeNextShot;
+    public float waitBeforeNextBullet;
     public float damage;
     public float raycastRange;
     private float _spread;
@@ -38,6 +39,8 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     public Camera cam;
 
     public GunRecoil recoil;
+
+    public GunRecoil camRecoil;
 
     private RaycastHit _rayHit;
 
@@ -93,10 +96,14 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     {
         canShoot = false;
         recoil.Fire();
+        camRecoil.rotationSpeed = recoil.rotationSpeed;
+        camRecoil.returnSpeed = recoil.returnSpeed;
+        camRecoil.RecoilRotation = recoil.RecoilRotation;
+        camRecoil.Fire();
 
         float x = Random.Range(minSpread, maxSpread);
         float y = Random.Range(minSpread, maxSpread);
-        Destroy(Instantiate(muzzleFlash, attackPoint.position, quaternion.identity, cam.transform), 0.2f);
+        Destroy(Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity, transform.GetChild(0)), 0.2f);
         if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f + x, 0.5f + y, 0f)),out _rayHit))
         {
             if (_rayHit.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
@@ -105,7 +112,7 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
             }
         }
 
-        CameraShaker.Instance.ShakeOnce(magnitude, roughness, fadeInTime, fadeOutTime);
+        //CameraShaker.Instance.ShakeOnce(magnitude, roughness, fadeInTime, fadeOutTime);
         
         _bulletsLeft--;
         bulletsClip--;

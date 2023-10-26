@@ -1,37 +1,35 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Enemy : MonoBehaviour
 {
 
     public float health;
     public float moneyWhenDie;
-    public GameEvent tookDamage;
-    
+    public GameEvent tookDamageEvent;
+    public GameEvent diedEvent;
+
     public float Health
     {
-        get
-        {
-            return health;
-        }
+        get => health;
         set
         {
             health = value;
-            tookDamage.Raise();
+            tookDamageEvent.Raise();
             TakeDamage();
         }
     }
 
     private void TakeDamage()
     {
-        if (health <= 0f)
+        if (Health <= 0f)
         {
-            Player.player.money += moneyWhenDie;
+            GetComponent<Collider>().enabled = false;
+            diedEvent.Raise(this, moneyWhenDie);
             
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
-        Destroy(Instantiate(ObjectsPool.objectPool.bloodSpray, transform.position, Quaternion.identity), 0.4f);
+        
+        Destroy(Instantiate(ObjectsPool.objectPool.bloodSpray, transform.position, Quaternion.identity, transform), 0.4f);
     }
 }

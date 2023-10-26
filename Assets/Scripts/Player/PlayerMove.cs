@@ -75,6 +75,8 @@ public class PlayerMove : MonoBehaviour
 
         afterGrapple = false;
 
+        collider.height = playerHeight;
+        
         cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
         Wcam.fieldOfView = PlayerPrefs.GetFloat("WeaponFOV");
     }
@@ -137,7 +139,7 @@ public class PlayerMove : MonoBehaviour
             if (!isForcingDown)
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y + playerHeight / 2 - 0.1f, transform.position.z);
-                rb.velocity = Vector3.zero;
+                //rb.velocity = Vector3.zero;
             }
             collider.height = playerHeight;
             GetComponent<HeadBobbing>().enabled = true;
@@ -164,13 +166,13 @@ public class PlayerMove : MonoBehaviour
             if (!Grounded)
             {
                 GetComponent<HeadBobbing>().enabled = false;
+                collider.height = playerHeight / 2;
                 rb.AddForce(Vector3.down * 100f * Time.deltaTime, ForceMode.Impulse);
             }
             else
             {
                 isForcingDown = false;
-                RaycastHit rayhit;
-                if (Physics.Raycast(transform.position, Vector3.down, out rayhit)) transform.position = rayhit.point;
+                collider.height = playerHeight / 2;
                 GetComponent<HeadBobbing>().enabled = true;
             }
         }
@@ -178,6 +180,8 @@ public class PlayerMove : MonoBehaviour
         // Mode - Crouching
         else if (Input.GetKey(crouchKey))
         {
+            collider.height = playerHeight / 2;
+            GetComponent<HeadBobbing>().enabled = false;
             isSliding = true;
             rb.AddForce(transform.forward * crouchMoveSpeed * Time.deltaTime);
         }

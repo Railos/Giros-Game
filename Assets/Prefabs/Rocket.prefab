@@ -53,6 +53,7 @@ MonoBehaviour:
   radius: 6
   damage: 50
   explosionForce: 12500
+  rocketSpeed: 50
   explosionEvent: {fileID: 11400000, guid: d986d5cb6739ed64bb52ef965cc8434c, type: 2}
   magnitude: 10
   roughness: 10

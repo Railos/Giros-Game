@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     
     private float _money;
 
+    public RaycastHit rayHit;
+
     public float money
     {
         get
@@ -39,6 +41,15 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void StartGainingMoney(Component sender, object mmoney)
+    {
+        if (mmoney is float)
+        {
+            money += (float)mmoney;
+        }
+        StartCoroutine(nameof(GainMoney));
+    }
+    
     IEnumerator GainMoney()
     {
         moneyText.text = _money.ToString();
@@ -73,7 +84,7 @@ public class Player : MonoBehaviour
             audioSource.volume = PlayerPrefs.GetFloat("Volume") / 100;
         }
     }
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("PickableWeapon"))

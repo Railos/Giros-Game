@@ -52,9 +52,9 @@ public class GrapplingGun : MonoBehaviour
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         // limit velocity if needed
-        if (flatVel.magnitude > 32f)
+        if (flatVel.magnitude > 22f)
         {
-            Vector3 limitedVel = flatVel.normalized * 32f;
+            Vector3 limitedVel = flatVel.normalized * 22f;
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
         
@@ -113,7 +113,7 @@ public class GrapplingGun : MonoBehaviour
         // return if predictionHit not found
         if (predictionHit.point == Vector3.zero) return;
 
-        if (pm.afterGrapple) pm.moveSpeed *= 4f;
+        //if (pm.afterGrapple) pm.moveSpeed *= 4f;
 
         swingPoint = predictionHit.point;
         joint = player.gameObject.AddComponent<SpringJoint>();
@@ -141,7 +141,6 @@ public class GrapplingGun : MonoBehaviour
         lr.positionCount = 0;
         Player.player.GetComponent<PlayerMove>().enabled = true;
         pm.afterGrapple = true;
-        pm.moveSpeed /= 4f;
 
         Destroy(joint);
     }
