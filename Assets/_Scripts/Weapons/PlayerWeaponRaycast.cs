@@ -12,7 +12,7 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     public bool canHold;
     public bool isShooting;
     
-    private int _bulletsLeft;
+    private int bulletsLeft;
 
     public float reloadTime;
     public float waitBeforeNextShot;
@@ -33,7 +33,7 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     public float fadeInTime;
     public float fadeOutTime;
 
-    [Header("Refs")] 
+    [Header("Refs")]
     public Transform attackPoint;
     
     public Camera cam;
@@ -58,7 +58,7 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
         CheckReload();
         CheckShooting();
         Checkings();
-        _bulletsLeft = bulletsInTime;
+        bulletsLeft = bulletsInTime;
     }
 
     private void CheckReload()
@@ -70,7 +70,7 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
         {
             interruptReload = false;
             isReloading = true;
-            onWeaponReload.Raise(this);
+            onWeaponReload.Raise(this, reloadSound);
             Invoke(nameof(Reload), reloadTime);
         }
     }
@@ -114,14 +114,14 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
 
         //CameraShaker.Instance.ShakeOnce(magnitude, roughness, fadeInTime, fadeOutTime);
         
-        _bulletsLeft--;
+        bulletsLeft--;
         bulletsClip--;
-        onWeaponShot.Raise();
+        onWeaponShot.Raise(this, shootSound);
         textRefresh.Raise(this);
         
         Invoke(nameof(ResetShot), waitBeforeNextShot);
         
-        if (_bulletsLeft > 0 && bulletsClip > 0)
+        if (bulletsLeft > 0 && bulletsClip > 0)
         {
             Shoot();
         }
@@ -135,7 +135,7 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     private void Reload()
     {
         if (interruptReload) return;
-        _bulletsLeft = bulletsInTime;
+        bulletsLeft = bulletsInTime;
         if (bulletsMagazineTotal <= clipCapacity - bulletsClip)
         {
             bulletsClip += bulletsMagazineTotal;
@@ -148,5 +148,6 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
 
         isReloading = false;
         textRefresh.Raise(this);
+        onWeaponReload.Raise(this);
     }
 }

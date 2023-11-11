@@ -87,17 +87,6 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("PickableWeapon"))
-        {
-            Destroy(other.gameObject);
-            other.GetComponent<PickUpWeapon>().onPickedUpWeapon.Raise();
-        }
-
-        if (other.gameObject.GetComponent<Ammo>())
-        {
-            other.GetComponent<Ammo>().CanPickUp();
-        }
-
         if (other.gameObject.GetComponent<IPickable>() != null)
         {
             other.gameObject.GetComponent<IPickable>().PickUp();

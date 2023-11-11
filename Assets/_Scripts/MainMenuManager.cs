@@ -43,6 +43,13 @@ public class MainMenuManager : MonoBehaviour
         volumeSlider.transform.GetChild(2).GetComponent<TMP_Text>().text = PlayerPrefs.GetFloat("Volume").ToString();
         volumeSlider.transform.GetChild(1).GetComponent<Slider>().value = PlayerPrefs.GetFloat("Volume");
         
+        resolution.GetComponent<TMP_Dropdown>().value = PlayerPrefs.GetInt("Resolution");
+        
+        CheckForKeys();
+    }
+
+    private void CheckForKeys()
+    {
         if (!PlayerPrefs.HasKey("Resolution"))
         {
             PlayerPrefs.SetInt("Resolution", 2);
@@ -50,7 +57,26 @@ public class MainMenuManager : MonoBehaviour
             
             Screen.SetResolution(resolutionsX[2], resolutionsY[2], FullScreenMode.ExclusiveFullScreen);
         }
-        resolution.GetComponent<TMP_Dropdown>().value = PlayerPrefs.GetInt("Resolution");
+
+        if (!PlayerPrefs.HasKey("SensX"))
+        {
+            PlayerPrefs.SetFloat("SensX", sliderX.transform.GetChild(1).GetComponent<Slider>().minValue);
+        }
+        
+        if (!PlayerPrefs.HasKey("SensY"))
+        {
+            PlayerPrefs.SetFloat("SensY", sliderY.transform.GetChild(1).GetComponent<Slider>().minValue);
+        }
+        
+        if (!PlayerPrefs.HasKey("FOV"))
+        {
+            PlayerPrefs.SetFloat("FOV", FOVSlider.transform.GetChild(1).GetComponent<Slider>().minValue);
+        }
+        
+        if (!PlayerPrefs.HasKey("WeaponFOV"))
+        {
+            PlayerPrefs.SetFloat("WeaponFOV", WeaponFOVSlider.transform.GetChild(1).GetComponent<Slider>().minValue);
+        }
     }
     
     public void StartGame()

@@ -6,9 +6,13 @@ using UnityEngine.UI;
 public class Hitmarker : MonoBehaviour
 {
     public RawImage hitmarker;
+    public GameEvent tookDamageEvent;
+    public AudioClip hitmarkerSound;
 
-    public void CheckHitmarker()
+    public void CheckHitmarker(Component sender, object data)
     {
+        if (data is AudioClip) return;
+        
         if (hitmarker.enabled)
         {
             StopCoroutine(ShowHitmarker());
@@ -18,6 +22,7 @@ public class Hitmarker : MonoBehaviour
         {
             StartCoroutine(ShowHitmarker());
         }
+        tookDamageEvent.Raise(this, hitmarkerSound);
     }
 
     IEnumerator ShowHitmarker()

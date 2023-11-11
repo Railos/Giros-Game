@@ -20,6 +20,7 @@ public class LaserGun : MonoBehaviour
     public LayerMask hitMask;
 
     [Header("Refs")] 
+    public AudioClip explosionSound;
     public GameEvent explosionEvent;
     public LineRenderer laser;
     public Transform attackPoint;
@@ -36,7 +37,7 @@ public class LaserGun : MonoBehaviour
     private RaycastHit[] hit;
     private bool drawLaser;
 
-        private void Start()
+    private void Start()
     {
         canShoot = true;
         animator = GetComponent<Animator>();
@@ -83,9 +84,9 @@ public class LaserGun : MonoBehaviour
             else
             {
                 Instantiate(ObjectsPool.objectPool.bigExplosion, hit[i].point, Quaternion.identity);
-                explosionEvent.Raise(this);
                 Collider[] colliders = Physics.OverlapSphere(hit[i].point, explosionRadius);
-
+                explosionEvent.Raise(this, explosionSound);
+                
                 for (int j = 0; j < colliders.Length; j++)
                 {
                     if (colliders[j].TryGetComponent(out Enemy enemyy))

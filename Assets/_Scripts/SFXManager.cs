@@ -7,8 +7,9 @@ public class SFXManager : MonoBehaviour
 
     public AudioSource audioSource;
     
-    public void PlaySound(AudioClip audioClip)
+    public void PlaySound(Component sender, object data)
     {
-        audioSource.PlayOneShot(audioClip);
+        if (data is AudioClip)
+            audioSource.PlayOneShot((AudioClip)data);
     }
 }

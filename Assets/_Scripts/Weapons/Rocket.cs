@@ -12,6 +12,7 @@ public class Rocket : MonoBehaviour
     public float rocketSpeed;
 
     public GameEvent explosionEvent;
+    public AudioClip explosionSound;
 
     [Header("Camera Shake")] 
     public float magnitude;
@@ -49,9 +50,9 @@ public class Rocket : MonoBehaviour
     private void Explode()
     {
         CameraShaker.Instance.ShakeOnce(magnitude, roughness, fadeInTime, fadeOutTime);
-        explosionEvent.Raise(this);
         Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
-
+        explosionEvent.Raise(this, explosionSound);
+        
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].TryGetComponent(out Enemy enemy))
@@ -63,5 +64,6 @@ public class Rocket : MonoBehaviour
                 rb.AddExplosionForce(explosionForce, transform.position, radius, 1.5f);
             }
         }
+        
     }
 }

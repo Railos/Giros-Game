@@ -19,21 +19,12 @@ public abstract class PlayerWeaponRanged : MonoBehaviour
     
     public GameEvent onWeaponShot;
     public GameEvent onWeaponReload;
+    public GameEvent onPickedUpWeapon;
     public GameEvent textRefresh;
-
-    public void PickUp()
-    {
-        isChosen = true;
-        isPickedUp = true;
-        if (WeaponManager.weaponManager.curWeaponRanged != null)
-        {
-            WeaponManager.weaponManager.curWeaponRanged.transform.GetChild(0).gameObject.SetActive(false);
-            WeaponManager.weaponManager.curWeaponRanged.isChosen = false;
-        }
-        WeaponManager.weaponManager.curWeaponRanged = this;
-        transform.GetChild(0).gameObject.SetActive(true);
-        WeaponManager.weaponManager.WeaponsRanged.Add(this);
-    }
+    
+    public AudioClip shootSound;
+    public AudioClip reloadSound;
+    public AudioClip pickedUpSound;
 
     public void SwitchToThis(int index)
     {
