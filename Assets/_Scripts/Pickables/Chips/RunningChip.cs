@@ -11,7 +11,7 @@ public class RunningChip : MonoBehaviour, IPickable
     public void PickUp()
     {
         pickedUpEvent.Raise(this, pickUpSound);
-        Player.player.GetComponent<PlayerMove>().sprintSpeed += 3f;
+        Player.player.GetComponent<PlayerMove>().playerSprinting.sprintSpeed += 3f;
         
         Destroy(this.gameObject);
     }

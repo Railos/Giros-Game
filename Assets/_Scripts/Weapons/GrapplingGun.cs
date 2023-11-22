@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,6 @@ public class GrapplingGun : MonoBehaviour
     [Header("References")]
     public LineRenderer lr;
     public Transform gunTip, cam;
-    private Transform player;
     public LayerMask whatIsGrappleable;
     private PlayerMove pm;
 
@@ -39,7 +39,6 @@ public class GrapplingGun : MonoBehaviour
         pm = Player.player.GetComponent<PlayerMove>();
         orientation = Player.player.transform;
         rb = Player.player.GetComponent<Rigidbody>();
-        player = Player.player.transform;
     }
     
     private void Update()
@@ -57,13 +56,16 @@ public class GrapplingGun : MonoBehaviour
             Vector3 limitedVel = flatVel.normalized * 22f;
             rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
-        
-        if (joint != null) OdmGearMovement();
     }
 
     private void LateUpdate()
     {
         DrawRope();
+    }
+
+    private void FixedUpdate()
+    {
+        if (joint != null) OdmGearMovement();
     }
 
     private void CheckForSwingPoints()
@@ -116,12 +118,12 @@ public class GrapplingGun : MonoBehaviour
         //if (pm.afterGrapple) pm.moveSpeed *= 4f;
 
         swingPoint = predictionHit.point;
-        joint = player.gameObject.AddComponent<SpringJoint>();
+        joint = orientation.gameObject.AddComponent<SpringJoint>();
         Player.player.GetComponent<PlayerMove>().enabled = false;
         joint.autoConfigureConnectedAnchor = false;
         joint.connectedAnchor = swingPoint;
 
-        float distanceFromPoint = Vector3.Distance(player.position, swingPoint);
+        float distanceFromPoint = Vector3.Distance(orientation.position, swingPoint);
 
         // the distance grapple will try to keep from grapple point. 
         joint.maxDistance = distanceFromPoint * 0.8f;
@@ -140,7 +142,8 @@ public class GrapplingGun : MonoBehaviour
     {
         lr.positionCount = 0;
         Player.player.GetComponent<PlayerMove>().enabled = true;
-        pm.afterGrapple = true;
+        Vector3 flatvel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        pm.moveSpeed = flatvel.magnitude / 2f;
 
         Destroy(joint);
     }
@@ -148,18 +151,18 @@ public class GrapplingGun : MonoBehaviour
     private void OdmGearMovement()
     {
         // right
-        if (Input.GetKey(KeyCode.D)) rb.AddForce(orientation.right * horizontalThrustForce * Time.deltaTime);
+        if (Input.GetKey(KeyCode.D)) rb.AddForce(orientation.right * horizontalThrustForce);
         // left
-        if (Input.GetKey(KeyCode.A)) rb.AddForce(-orientation.right * horizontalThrustForce * Time.deltaTime);
+        if (Input.GetKey(KeyCode.A)) rb.AddForce(-orientation.right * horizontalThrustForce);
 
         // forward
-        if (Input.GetKey(KeyCode.W)) rb.AddForce(orientation.forward * horizontalThrustForce * Time.deltaTime);
+        if (Input.GetKey(KeyCode.W)) rb.AddForce(orientation.forward * horizontalThrustForce);
 
         // shorten cable
         if (Input.GetKey(KeyCode.Space))
         {
             Vector3 directionToPoint = swingPoint - transform.position;
-            rb.AddForce(directionToPoint.normalized * forwardThrustForce * Time.deltaTime);
+            rb.AddForce(directionToPoint.normalized * forwardThrustForce);
 
             float distanceFromPoint = Vector3.Distance(transform.position, swingPoint);
 

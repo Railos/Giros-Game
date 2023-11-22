@@ -9,21 +9,18 @@ public class PlayerMove : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed;
     public float walkSpeed;
-    public float sprintSpeed;
+    public float crouchSpeed;
 
     public float groundDrag;
-
-    [Header("Jumping")]
-    public float jumpForce;
-    public float jumpCooldown;
-    public float airMultiplier;
-
-    [Header("Crouching")]
-    public float crouchMoveSpeed;
+    
+    [Header("Dashing")]
+    [SerializeField] private int dashTime;
+    private int _dashTime;
+    [SerializeField] private float dashSpeed;
+    private bool CanDash = true;
+    private bool isDashing;
 
     [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode sprintKey = KeyCode.LeftShift;
     public KeyCode crouchKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
@@ -34,46 +31,36 @@ public class PlayerMove : MonoBehaviour
     [Header("Slope Handling")]
     public float maxSlopeAngle;
     private RaycastHit slopeHit;
-    private bool exitingSlope;
+    public bool exitingSlope;
 
-    public float horizontalInput;
-    public float verticalInput;
+    [Header("Mechanics")] 
+    public PlayerSprinting playerSprinting;
+    public PlayerSliding playerSliding;
+    public PlayerJumping playerJumping;
+
+    private float horizontalInput;
+    private float verticalInput;
     
+    [Header("Refs")]
     public Transform orientation;
-    
-    [SerializeField] private int dashTime;
-    private int _dashTime;
-    [SerializeField] private float dashSpeed;
-    public bool CanDash = true;
-    private bool isDashing;
-
-    private int jumpsLeft;
-    public int MaxJumps = 1;
-    
-    [SerializeField] private Camera cam;
+    public Camera cam;
     [SerializeField] private Camera Wcam;
-
-    [SerializeField] private new CapsuleCollider collider;
-    
+    public new CapsuleCollider collider;
     [SerializeField] private AudioSource footsteps;
     
     Vector3 moveDirection;
-
-    Rigidbody rb;
-
-    public bool isForcingDown;
-    private bool isSliding;
-
-    public bool afterGrapple;
+    [HideInInspector] public Rigidbody rb;
+    [HideInInspector] public HeadBobbing headBob;
+    
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
-        _dashTime = dashTime;
+        headBob = GetComponent<HeadBobbing>();
 
-        afterGrapple = false;
+        _dashTime = dashTime;
 
         collider.height = playerHeight;
         
@@ -93,16 +80,11 @@ public class PlayerMove : MonoBehaviour
         // handle drag
         if (Grounded)
         {
-            afterGrapple = false;
-            rb.drag = groundDrag;
-            if (!Input.GetKey(jumpKey))
-            {
-                jumpsLeft = MaxJumps;
-            }
+            if (!playerSliding.isSliding) rb.drag = groundDrag;
         }else rb.drag = 0;
 
 
-        if (moveDirection.magnitude > 0 && !isSliding && Grounded && !isDashing) footsteps.enabled = true;
+        if (moveDirection.magnitude > 0 && Grounded && !isDashing && !playerSliding.isSliding) footsteps.enabled = true;
         else footsteps.enabled = false;
     }
 
@@ -117,38 +99,22 @@ public class PlayerMove : MonoBehaviour
         verticalInput = Input.GetAxisRaw("Vertical");
 
         // when to jump
-        if(Input.GetKeyDown(jumpKey) && jumpsLeft > 0 && !isForcingDown)
-        {
-            Jump();
-            Invoke(nameof(ResetJump), jumpCooldown);
-
-            jumpsLeft--;
-        }
 
         // start crouch
         if (Input.GetKeyDown(crouchKey))
         {
             collider.height = playerHeight / 2;
-            isForcingDown = true;
-            GetComponent<HeadBobbing>().enabled = false;
         }
 
         // stop crouch
         if (Input.GetKeyUp(crouchKey))
         {
-            if (!isForcingDown)
-            {
-                transform.position = new Vector3(transform.position.x, transform.position.y + playerHeight / 2 - 0.1f, transform.position.z);
-                //rb.velocity = Vector3.zero;
-            }
             collider.height = playerHeight;
-            GetComponent<HeadBobbing>().enabled = true;
-            isSliding = false;
+            headBob.enabled = true;
         }
         
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && CanDash && moveDirection.magnitude > 0f && !isForcingDown && !isSliding)
+        if (Input.GetKeyDown(KeyCode.LeftAlt) && CanDash && moveDirection.magnitude > 0f)
         {
-            afterGrapple = false;
             CanDash = false;
             foreach (var v in WeaponManager.weaponManager.WeaponsRanged)
             {
@@ -161,39 +127,16 @@ public class PlayerMove : MonoBehaviour
 
     private void StateHandler()
     {
-        if (isForcingDown)
-        {
-            if (!Grounded)
-            {
-                GetComponent<HeadBobbing>().enabled = false;
-                collider.height = playerHeight / 2;
-                rb.AddForce(Vector3.down * 100f * Time.deltaTime, ForceMode.Impulse);
-            }
-            else
-            {
-                isForcingDown = false;
-                collider.height = playerHeight / 2;
-                GetComponent<HeadBobbing>().enabled = true;
-            }
-        }
-        
+
         // Mode - Crouching
-        else if (Input.GetKey(crouchKey))
+        if (Input.GetKey(crouchKey))
         {
             collider.height = playerHeight / 2;
-            GetComponent<HeadBobbing>().enabled = false;
-            isSliding = true;
-            rb.AddForce(transform.forward * crouchMoveSpeed * Time.deltaTime);
-        }
-
-        // Mode - Sprinting
-        else if(Grounded && Input.GetKey(sprintKey))
-        {
-            moveSpeed = sprintSpeed;
+            moveSpeed = crouchSpeed;
         }
 
         // Mode - Walking
-        else if (Grounded)
+        else if (Grounded && !playerSliding.isSliding)
         {
             moveSpeed = walkSpeed;
         }
@@ -205,24 +148,21 @@ public class PlayerMove : MonoBehaviour
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         // on slope
-        if (!isSliding)
+        if (OnSlope() && !exitingSlope)
         {
-            if (OnSlope() && !exitingSlope)
-            {
-                rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 20f, ForceMode.Force);
+            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 20f, ForceMode.Force);
 
-                if (rb.velocity.y > 0)
-                    rb.AddForce(Vector3.down * 80f, ForceMode.Force);
-            }
+            if (rb.velocity.y > 0)
+                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+        }
 
             // on ground
-            else if (Grounded)
-            {
-                rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-            }
-            else if (!Grounded)
-                rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+        else if (Grounded)
+        {
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
         }
+        else if (!Grounded)
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * playerJumping.airMultiplier, ForceMode.Force);
 
         // turn gravity off while on slope
         rb.useGravity = !OnSlope();
@@ -243,26 +183,12 @@ public class PlayerMove : MonoBehaviour
             Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
             // limit velocity if needed
-            if (flatVel.magnitude > moveSpeed && !afterGrapple)
+            if (flatVel.magnitude > moveSpeed)
             {
                 Vector3 limitedVel = flatVel.normalized * moveSpeed;
                 rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
             }
         }
-    }
-
-    private void Jump()
-    {
-        exitingSlope = true;
-
-        // reset y velocity
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-    }
-    private void ResetJump()
-    {
-        exitingSlope = false;
     }
 
     private bool OnSlope()
@@ -285,8 +211,8 @@ public class PlayerMove : MonoBehaviour
     {
         Vector3 moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
         
-        float prevHeight = GetComponent<HeadBobbing>().headBobHeight;
-        GetComponent<HeadBobbing>().headBobHeight = 0f;
+        float prevHeight = headBob.headBobHeight;
+        headBob.headBobHeight = 0f;
 
         isDashing = true;
         while (_dashTime > 0)
@@ -326,7 +252,7 @@ public class PlayerMove : MonoBehaviour
             v.transform.parent.GetComponent<HeadBobbing>().headBobHeight = 0.1f;
         }
         
-        GetComponent<HeadBobbing>().headBobHeight = prevHeight; 
+        headBob.headBobHeight = prevHeight; 
         cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
         Wcam.fieldOfView = PlayerPrefs.GetFloat("WeaponFOV");
         _dashTime = dashTime;

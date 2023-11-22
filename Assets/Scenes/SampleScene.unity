@@ -6676,8 +6676,8 @@ MonoBehaviour:
     m_Bits: 1
   isSwinging: 0
   maxSwingDistance: 50
-  horizontalThrustForce: 20
-  forwardThrustForce: 20
+  horizontalThrustForce: 10
+  forwardThrustForce: 10
   extendCableSpeed: 10
   predictionSphereCastRadius: 5
   predictionPoint: {fileID: 336452393}
@@ -9396,7 +9396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1484152221
 Transform:
   m_ObjectHideFlags: 0
@@ -10299,6 +10299,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1794047216}
   - component: {fileID: 1794047218}
+  - component: {fileID: 1794047226}
+  - component: {fileID: 1794047225}
+  - component: {fileID: 1794047224}
   - component: {fileID: 1794047217}
   - component: {fileID: 1794047221}
   - component: {fileID: 1794047220}
@@ -10365,34 +10368,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 0
   walkSpeed: 8
-  sprintSpeed: 8
+  crouchSpeed: 3
   groundDrag: 4
-  jumpForce: 7
-  jumpCooldown: 0.25
-  airMultiplier: 0.4
-  crouchMoveSpeed: 20000
-  jumpKey: 32
-  sprintKey: 304
-  crouchKey: 306
+  dashTime: 60
+  dashSpeed: 800
+  crouchKey: 120
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2
     m_Bits: 2147483647
   Grounded: 1
   maxSlopeAngle: 45
-  horizontalInput: 0
-  verticalInput: 0
+  exitingSlope: 0
+  playerSprinting: {fileID: 1794047224}
+  playerSliding: {fileID: 1794047225}
+  playerJumping: {fileID: 1794047226}
   orientation: {fileID: 1794047216}
-  dashTime: 60
-  dashSpeed: 800
-  CanDash: 1
-  MaxJumps: 1
   cam: {fileID: 330585545}
   Wcam: {fileID: 2117834169}
   collider: {fileID: 993601299}
   footsteps: {fileID: 1794047222}
-  isForcingDown: 0
-  afterGrapple: 0
+  rb: {fileID: 0}
+  headBob: {fileID: 0}
 --- !u!54 &1794047219
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10637,6 +10634,55 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1794047224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794047215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f0e0b6302088584aafac8b2b6ae05b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSprinting: 0
+  sprintKey: 304
+  sprintSpeed: 8
+--- !u!114 &1794047225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794047215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 649136a4f81531e47895bc60bd3f141b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slideKey: 99
+  maxSlideSpeed: 16
+  boostDuration: 0.5
+  slideCooldown: 1.5
+  isSliding: 0
+--- !u!114 &1794047226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794047215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ac1f430fe62404997f6f1226f6afa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpKey: 32
+  jumpForce: 8
+  jumpCooldown: 0.25
+  airMultiplier: 0.4
+  maxJumps: 1
 --- !u!1 &1794065351
 GameObject:
   m_ObjectHideFlags: 0

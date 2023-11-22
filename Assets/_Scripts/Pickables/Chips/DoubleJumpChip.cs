@@ -11,7 +11,7 @@ public class DoubleJumpChip : MonoBehaviour, IPickable
     public void PickUp()
     {
         pickedUpEvent.Raise(this, pickUpSound);
-        Player.player.GetComponent<PlayerMove>().MaxJumps += 1;
+        Player.player.GetComponent<PlayerMove>().playerJumping.maxJumps += 1;
         
         Destroy(this.gameObject);
     }

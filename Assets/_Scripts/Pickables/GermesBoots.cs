@@ -10,9 +10,9 @@ public class GermesBoots : MonoBehaviour, IPickable
     {
         pickedUpEvent.Raise(this);
         Player.player.GetComponent<PlayerMove>().walkSpeed += 4f;
-        Player.player.GetComponent<PlayerMove>().sprintSpeed += 1f;
+        Player.player.GetComponent<PlayerMove>().playerSprinting.sprintSpeed += 1f;
 
-        Player.player.GetComponent<PlayerMove>().jumpForce += 2f;
+        Player.player.GetComponent<PlayerMove>().playerJumping.jumpForce += 2f;
 
         StartCoroutine(nameof(Break));
 
@@ -27,9 +27,9 @@ public class GermesBoots : MonoBehaviour, IPickable
         yield return new WaitForSeconds(30f);
         
         Player.player.GetComponent<PlayerMove>().walkSpeed -= 4f;
-        Player.player.GetComponent<PlayerMove>().sprintSpeed -= 1f;
+        Player.player.GetComponent<PlayerMove>().playerSprinting.sprintSpeed -= 1f;
 
-        Player.player.GetComponent<PlayerMove>().jumpForce -= 2f;
+        Player.player.GetComponent<PlayerMove>().playerJumping.jumpForce -= 2f;
         
         Destroy(this.gameObject);
     } 
