@@ -38,7 +38,7 @@ public class PlayerSliding : MonoBehaviour
                 PM.collider.height = 1f;
                 PM.playerSprinting.enabled = false;
                 isBoosting = true;
-                PM.headBob.enabled = false;
+                PM.headBob.headBobFrequency = 1000f;
                 StartCoroutine(nameof(DecreaseSpeedAfterBoost));
             }
         }
@@ -53,17 +53,7 @@ public class PlayerSliding : MonoBehaviour
         {
             if (isSliding)
             {
-                Invoke(nameof(ResetSlide), slideCooldown);
-                StopCoroutine(nameof(DecreaseSpeedAfterBoost));
-                StopCoroutine(nameof(DecreaseFOVSlide));
-                StartCoroutine(DecreaseFOVSlide());
-                transform.position = new Vector3(transform.position.x, transform.position.y + 0.55f, transform.position.z);
-                PM.collider.height = 2f;
-                PM.playerSprinting.enabled = true;
-                isBoosting = false;
-                PM.headBob.enabled = true;
-                isSliding = false;
-                PM.playerJumping.enabled = true;
+                StopSliding();
             }
         }
     }
@@ -83,10 +73,21 @@ public class PlayerSliding : MonoBehaviour
 
         PM.cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
     }
+
+    private void StopSliding()
+    {
+        isSliding = false;
+        Invoke(nameof(ResetSlide), slideCooldown);
+        StopCoroutine(nameof(DecreaseSpeedAfterBoost));
+        PM.collider.height = 2f;
+        PM.playerSprinting.enabled = true;
+        isBoosting = false;
+        PM.headBob.headBobFrequency = 1.8f;
+        PM.playerJumping.enabled = true;
+    }
     
     IEnumerator DecreaseSpeedAfterBoost()
     {
-        PM.rb.drag = -20f;
         yield return new WaitForSeconds(boostDuration);
         isBoosting = false;
 
@@ -97,8 +98,7 @@ public class PlayerSliding : MonoBehaviour
             PM.moveSpeed -= 1.5f;
             yield return new WaitForSeconds(0.1f);
         }
-
-        PM.moveSpeed = PM.walkSpeed;
-        PM.collider.height = 2f;
+        
+        StopSliding();
     }
 }

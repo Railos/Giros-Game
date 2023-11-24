@@ -7,7 +7,7 @@ public class HeadBobbing : MonoBehaviour
     [SerializeField] Transform head;
 	[SerializeField] private PlayerMove character;
 	
-	[SerializeField] float headBobFrequency = 1.5f;
+	public float headBobFrequency = 1.5f;
 	public float headBobHeight = 0.1f;
 	[SerializeField] float headBobSwayAngle = 0.5f;
 	[SerializeField] float headBobSideMovement = 0.05f;

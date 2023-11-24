@@ -12,13 +12,6 @@ public class PlayerMove : MonoBehaviour
     public float crouchSpeed;
 
     public float groundDrag;
-    
-    [Header("Dashing")]
-    [SerializeField] private int dashTime;
-    private int _dashTime;
-    [SerializeField] private float dashSpeed;
-    private bool CanDash = true;
-    private bool isDashing;
 
     [Header("Keybinds")]
     public KeyCode crouchKey = KeyCode.LeftControl;
@@ -37,6 +30,7 @@ public class PlayerMove : MonoBehaviour
     public PlayerSprinting playerSprinting;
     public PlayerSliding playerSliding;
     public PlayerJumping playerJumping;
+    public PlayerDashing playerDashing;
 
     private float horizontalInput;
     private float verticalInput;
@@ -44,11 +38,11 @@ public class PlayerMove : MonoBehaviour
     [Header("Refs")]
     public Transform orientation;
     public Camera cam;
-    [SerializeField] private Camera Wcam;
+    public Camera Wcam;
     public new CapsuleCollider collider;
     [SerializeField] private AudioSource footsteps;
     
-    Vector3 moveDirection;
+    public Vector3 moveDirection;
     [HideInInspector] public Rigidbody rb;
     [HideInInspector] public HeadBobbing headBob;
     
@@ -59,8 +53,6 @@ public class PlayerMove : MonoBehaviour
         rb.freezeRotation = true;
 
         headBob = GetComponent<HeadBobbing>();
-
-        _dashTime = dashTime;
 
         collider.height = playerHeight;
         
@@ -84,7 +76,7 @@ public class PlayerMove : MonoBehaviour
         }else rb.drag = 0;
 
 
-        if (moveDirection.magnitude > 0 && Grounded && !isDashing && !playerSliding.isSliding) footsteps.enabled = true;
+        if (moveDirection.magnitude > 0 && Grounded && !playerDashing.isDashing && !playerSliding.isSliding) footsteps.enabled = true;
         else footsteps.enabled = false;
     }
 
@@ -111,17 +103,6 @@ public class PlayerMove : MonoBehaviour
         {
             collider.height = playerHeight;
             headBob.enabled = true;
-        }
-        
-        if (Input.GetKeyDown(KeyCode.LeftAlt) && CanDash && moveDirection.magnitude > 0f)
-        {
-            CanDash = false;
-            foreach (var v in WeaponManager.weaponManager.WeaponsRanged)
-            {
-                v.transform.parent.GetComponent<HeadBobbing>().headBobHeight = 0f;
-            }
-            StartCoroutine(Dashing()); 
-            StartCoroutine(WaitDashing()); 
         }
     }
 
@@ -207,62 +188,5 @@ public class PlayerMove : MonoBehaviour
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
-    IEnumerator Dashing()
-    {
-        Vector3 moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        
-        float prevHeight = headBob.headBobHeight;
-        headBob.headBobHeight = 0f;
-
-        isDashing = true;
-        while (_dashTime > 0)
-        {
-            rb.AddForce(moveDir * dashSpeed * Time.fixedDeltaTime, ForceMode.Impulse);
-            if (rb.velocity.y > 5f)
-            {
-                rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            }
-
-            if (!Player.player.isPaused)
-            {
-                cam.fieldOfView += 0.15f;
-                Wcam.fieldOfView += 0.07f;
-                _dashTime--;
-            }
-            
-            yield return null;
-        }
-        isDashing = false;
-        _dashTime = dashTime;
-        
-        while (_dashTime > 0)
-        {
-            if (!Player.player.isPaused)
-            {
-                cam.fieldOfView -= 0.15f;
-                Wcam.fieldOfView -= 0.07f;
-                _dashTime--;
-            }
-            
-            yield return null;
-        }
-
-        foreach (var v in WeaponManager.weaponManager.WeaponsRanged)
-        {
-            v.transform.parent.GetComponent<HeadBobbing>().headBobHeight = 0.1f;
-        }
-        
-        headBob.headBobHeight = prevHeight; 
-        cam.fieldOfView = PlayerPrefs.GetFloat("FOV");
-        Wcam.fieldOfView = PlayerPrefs.GetFloat("WeaponFOV");
-        _dashTime = dashTime;
-        moveSpeed = walkSpeed;
-    }
-
-    IEnumerator WaitDashing()
-    {
-        yield return new WaitForSeconds(1f);
-
-        CanDash = true;
-    }
+    
 }

@@ -1806,7 +1806,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
+  far clip plane: 5000
   field of view: 70
   orthographic: 0
   orthographic size: 5
@@ -1865,7 +1865,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 1
+  m_Antialiasing: 2
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
@@ -8766,7 +8766,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1420040372}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6, z: 0}
+  m_LocalPosition: {x: 0, y: 0.698, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10299,6 +10299,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1794047216}
   - component: {fileID: 1794047218}
+  - component: {fileID: 1794047227}
   - component: {fileID: 1794047226}
   - component: {fileID: 1794047225}
   - component: {fileID: 1794047224}
@@ -10370,8 +10371,6 @@ MonoBehaviour:
   walkSpeed: 8
   crouchSpeed: 3
   groundDrag: 4
-  dashTime: 60
-  dashSpeed: 800
   crouchKey: 120
   playerHeight: 2
   whatIsGround:
@@ -10383,11 +10382,13 @@ MonoBehaviour:
   playerSprinting: {fileID: 1794047224}
   playerSliding: {fileID: 1794047225}
   playerJumping: {fileID: 1794047226}
+  playerDashing: {fileID: 1794047227}
   orientation: {fileID: 1794047216}
   cam: {fileID: 330585545}
   Wcam: {fileID: 2117834169}
   collider: {fileID: 993601299}
   footsteps: {fileID: 1794047222}
+  moveDirection: {x: 0, y: 0, z: 0}
   rb: {fileID: 0}
   headBob: {fileID: 0}
 --- !u!54 &1794047219
@@ -10664,7 +10665,7 @@ MonoBehaviour:
   slideKey: 99
   maxSlideSpeed: 16
   boostDuration: 0.5
-  slideCooldown: 1.5
+  slideCooldown: 1
   isSliding: 0
 --- !u!114 &1794047226
 MonoBehaviour:
@@ -10683,6 +10684,23 @@ MonoBehaviour:
   jumpCooldown: 0.25
   airMultiplier: 0.4
   maxJumps: 1
+--- !u!114 &1794047227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794047215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c52c1e7913d63d419541c0f7a33bde4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dashKey: 308
+  dashTime: 70
+  dashSpeed: 750
+  dashCooldown: 1
+  isDashing: 0
 --- !u!1 &1794065351
 GameObject:
   m_ObjectHideFlags: 0
@@ -12383,7 +12401,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.01
-  far clip plane: 1000
+  far clip plane: 5000
   field of view: 70
   orthographic: 0
   orthographic size: 5
