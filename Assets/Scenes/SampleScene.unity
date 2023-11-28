@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 410087040}
-  m_IndirectSpecularColor: {r: 0.12076032, g: 0.18643649, b: 0.3352496, a: 1}
+  m_IndirectSpecularColor: {r: 0.12035389, g: 0.18583913, b: 0.33420908, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -9396,7 +9396,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1484152221
 Transform:
   m_ObjectHideFlags: 0
@@ -10299,6 +10299,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1794047216}
   - component: {fileID: 1794047218}
+  - component: {fileID: 1794047228}
   - component: {fileID: 1794047227}
   - component: {fileID: 1794047226}
   - component: {fileID: 1794047225}
@@ -10369,9 +10370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 0
   walkSpeed: 8
-  crouchSpeed: 3
   groundDrag: 4
-  crouchKey: 120
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2
@@ -10383,6 +10382,7 @@ MonoBehaviour:
   playerSliding: {fileID: 1794047225}
   playerJumping: {fileID: 1794047226}
   playerDashing: {fileID: 1794047227}
+  playerCrouching: {fileID: 1794047228}
   orientation: {fileID: 1794047216}
   cam: {fileID: 330585545}
   Wcam: {fileID: 2117834169}
@@ -10697,10 +10697,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dashKey: 308
-  dashTime: 70
-  dashSpeed: 750
+  dashTime: 40
+  dashSpeed: 775
   dashCooldown: 1
   isDashing: 0
+--- !u!114 &1794047228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1794047215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a6280bae7c176e43a0ff3c37dca63e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crouchKey: 306
+  crouchSpeed: 4
 --- !u!1 &1794065351
 GameObject:
   m_ObjectHideFlags: 0

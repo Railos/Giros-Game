@@ -9,12 +9,8 @@ public class PlayerMove : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed;
     public float walkSpeed;
-    public float crouchSpeed;
 
     public float groundDrag;
-
-    [Header("Keybinds")]
-    public KeyCode crouchKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -31,6 +27,7 @@ public class PlayerMove : MonoBehaviour
     public PlayerSliding playerSliding;
     public PlayerJumping playerJumping;
     public PlayerDashing playerDashing;
+    public PlayerCrouching playerCrouching;
 
     private float horizontalInput;
     private float verticalInput;
@@ -67,7 +64,6 @@ public class PlayerMove : MonoBehaviour
 
         MyInput();
         SpeedControl();
-        StateHandler();
 
         // handle drag
         if (Grounded)
@@ -89,38 +85,6 @@ public class PlayerMove : MonoBehaviour
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
-
-        // when to jump
-
-        // start crouch
-        if (Input.GetKeyDown(crouchKey))
-        {
-            collider.height = playerHeight / 2;
-        }
-
-        // stop crouch
-        if (Input.GetKeyUp(crouchKey))
-        {
-            collider.height = playerHeight;
-            headBob.enabled = true;
-        }
-    }
-
-    private void StateHandler()
-    {
-
-        // Mode - Crouching
-        if (Input.GetKey(crouchKey))
-        {
-            collider.height = playerHeight / 2;
-            moveSpeed = crouchSpeed;
-        }
-
-        // Mode - Walking
-        else if (Grounded && !playerSliding.isSliding)
-        {
-            moveSpeed = walkSpeed;
-        }
     }
 
     private void MovePlayer()
