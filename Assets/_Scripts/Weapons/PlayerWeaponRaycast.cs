@@ -25,13 +25,6 @@ public class PlayerWeaponRaycast : PlayerWeaponRanged
     public float maxSpread;
 
     public KeyCode reloadKey;
-    
-
-    [Header("Camera Shake")]
-    public float magnitude;
-    public float roughness;
-    public float fadeInTime;
-    public float fadeOutTime;
 
     [Header("Refs")]
     public Transform attackPoint;

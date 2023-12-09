@@ -26,19 +26,4 @@ public abstract class PlayerWeaponRanged : MonoBehaviour
     public AudioClip reloadSound;
     public AudioClip pickedUpSound;
 
-    public void SwitchToThis(int index)
-    {
-        if (WeaponManager.weaponManager.curWeaponRanged.isReloading)
-        {
-            WeaponManager.weaponManager.curWeaponRanged.interruptReload = true;
-            WeaponManager.weaponManager.curWeaponRanged.isReloading = false;
-        }
-        transform.GetChild(0).gameObject.SetActive(true);
-        textRefresh.Raise(this);
-        WeaponManager.weaponManager.curWeaponRanged.transform.GetChild(0).gameObject.SetActive(false);
-        WeaponManager.weaponManager.curWeaponRanged.isChosen = false;
-        WeaponManager.weaponManager.curWeaponRanged = WeaponManager.weaponManager.WeaponsRanged[index];
-        isChosen = true;
-    }
-
 }

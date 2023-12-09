@@ -7,13 +7,10 @@ public class RepairCabinet : Interactive
 {
     private bool isInteracting;
     [SerializeField] private GameObject canvasObject;
-    private GameObject curCanvas;
-
-    private void Start()
-    {
-        curCanvas = canvasObject;
-    }
-
+    [SerializeField] private PlayerWeaponRaycast curWeapon = null;
+    [SerializeField] private GameObject curCanvas;
+    private int price;
+    
     private void Update()
     {
         if (!CheckInteract()) return;
@@ -43,7 +40,6 @@ public class RepairCabinet : Interactive
             Cursor.lockState = CursorLockMode.Locked;
         }
         PauseMenu.Instance.canPause = !PauseMenu.Instance.canPause;
-        curCanvas = canvasObject;
         canvasObject.SetActive(!canvasObject.activeSelf);
         Player.player.GetComponent<PlayerLook>().enabled = !Player.player.GetComponent<PlayerLook>().enabled;
         Player.player.GetComponent<PlayerMove>().enabled = !Player.player.GetComponent<PlayerMove>().enabled;
@@ -51,8 +47,45 @@ public class RepairCabinet : Interactive
 
     public void ChangeCanvases(GameObject targetCanvas)
     {
-        if (curCanvas != canvasObject) curCanvas.SetActive(false);
+        curCanvas.SetActive(false);
         curCanvas = targetCanvas;
         curCanvas.SetActive(true);
+    }
+
+    public void SetPrice(int cost)
+    {
+        price = cost;
+    }
+
+    public void SetCurGun(PlayerWeaponRaycast weapon)
+    {
+        curWeapon = weapon;
+    }
+
+    public void UpgradeDamage(float upgrade)
+    {
+        if (Player.player.money >= price)
+        {
+            Player.player.money -= price;
+            curWeapon.damage += upgrade;
+        }
+    }
+    
+    public void UpgradeAmmo(int upgrade)
+    {
+        if (Player.player.money >= price)
+        {
+            Player.player.money -= price;
+            curWeapon.clipCapacity += upgrade;
+        }
+    }
+    
+    public void UpgradeShootSpeed(float upgrade)
+    {
+        if (Player.player.money >= price)
+        {
+            Player.player.money -= price;
+            curWeapon.waitBeforeNextShot -= upgrade;
+        }
     }
 }
