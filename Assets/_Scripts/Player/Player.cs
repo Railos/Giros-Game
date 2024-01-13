@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -90,6 +92,24 @@ public class Player : MonoBehaviour
         if (other.gameObject.GetComponent<IPickable>() != null)
         {
             other.gameObject.GetComponent<IPickable>().PickUp();
+        }
+
+        if (other.gameObject.GetComponent<Door>() != null)
+        {
+            other.gameObject.GetComponent<Door>().OpenDoor();
+        }
+
+        if (other.gameObject.GetComponent<EnemyZoneTrigger>() != null)
+        {
+            other.gameObject.GetComponent<EnemyZoneTrigger>().LockDoors();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.GetComponent<Door>() != null)
+        {
+            other.gameObject.GetComponent<Door>().CloseDoor();
         }
     }
 }

@@ -50,11 +50,10 @@ public class FistPunch : MonoBehaviour
         StartCoroutine(nameof(Waitings));
         for (int i = 0; i < 5; i++)
         {
-            if (Physics.SphereCast(cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), punchSphereRadius,out _out, punchDistance))
+            if (Physics.Raycast(cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out _out, punchDistance))
             {
                 if (_out.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
                 {
-                    Debug.Log("Punched Enemy");
                     _out.collider.GetComponent<Enemy>().Health -= damage;
                 }
                 break;

@@ -1,18 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class SimpleFollowAI : MonoBehaviour
 {
 
-    private bool isReadyToFollow;
-    
-    void Start()
-    {
-        StartCoroutine(waitForFollow());
-    }
-    
+    public bool isReadyToFollow;
+    [SerializeField] private int _curZone;
+
     void Update()
     {
         if (isReadyToFollow)
@@ -21,10 +16,10 @@ public class SimpleFollowAI : MonoBehaviour
         }
     }
 
-    IEnumerator waitForFollow()
+    public void StartFollowing(Component sender, object curZone)
     {
-        yield return new WaitForSeconds(10f);
-
-        isReadyToFollow = true;
+        if (curZone.GetType() != typeof(int)) return;
+        if (_curZone == (int)curZone)
+            isReadyToFollow = true;
     }
 }

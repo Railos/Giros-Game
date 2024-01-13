@@ -53,6 +53,10 @@ public class RepairCabinet : Interactive
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             interactText.SetActive(false);
+            if (WeaponManager.weaponManager.WeaponsRanged.Count > 0)
+            {
+                WeaponManager.weaponManager.curWeaponRanged.enabled = false;
+            }
         }
         else
         {
@@ -62,6 +66,10 @@ public class RepairCabinet : Interactive
             curCanvas.SetActive(false);
             curCanvas = mainCanvas;
             curCanvas.SetActive(true);
+            if (WeaponManager.weaponManager.WeaponsRanged.Count > 0)
+            {
+                WeaponManager.weaponManager.curWeaponRanged.enabled = true;
+            }
         }
         RenderMainCanvasButtons();
         PauseMenu.Instance.canPause = !PauseMenu.Instance.canPause;
